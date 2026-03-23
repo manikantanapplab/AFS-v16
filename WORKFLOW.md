@@ -7,21 +7,34 @@ This covers everything from starting a new project to handing off to the BE team
 
 ## Part 1 — Starting a New Project
 
-### Step 1 — Copy the package
+### Step 1 — Start from the template
 
+**Via degit (recommended):**
 ```bash
-cp -r afs-v16 my-client-project
+npx degit your-github-username/agency-frontend-system my-client-project
 cd my-client-project
 npm install
 ```
 
-Do not clone from the template git directly into a client folder.
-Copy the package folder, then initialise a fresh git repo for the project.
+degit downloads the latest template files with no git history attached —
+clean slate, ready to initialise as the project's own repo.
 
+**Via GitHub UI:**
+Go to the template repo → "Use this template" → "Create a new repository"
+→ clone your new repo → `npm install`
+
+**Via pinned release (when you need a specific version):**
+```bash
+npx degit your-github-username/agency-frontend-system#v16.0.0 my-client-project
+cd my-client-project
+npm install
+```
+
+Then initialise git:
 ```bash
 git init
 git add .
-git commit -m "init: afs v16 setup"
+git commit -m "init: afs v16.0.0"
 ```
 
 ### Step 2 — Configure (5 minutes)
@@ -339,3 +352,128 @@ in your page files automatically on restart. You don't need to manually update a
 | Day 13 | Production build, PurgeCSS safelist review |
 | Day 14 | Set `CRITICAL = true`, final build, lighthouse check |
 | Day 15 | Hand `dist/` to BE team with `INTEGRATION.md` |
+
+
+---
+
+## Part 8 — Releases & Versioning
+
+This covers how to publish new versions of the AFS template itself —
+not client projects, but the template repo your team pulls from.
+
+### Versioning rules
+
+AFS follows semantic versioning: `MAJOR.MINOR.PATCH`
+
+| Change | Bump | Example |
+|---|---|---|
+| Breaking change — build system, token names, component API | MAJOR | 16 → 17 |
+| New component, new command, new doc, non-breaking feature | MINOR | 16.0 → 16.1 |
+| Bug fix, typo, small correction | PATCH | 16.0.0 → 16.0.1 |
+
+### Before publishing a release
+
+**1. Update `package.json` version:**
+```json
+{
+  "version": "16.1.0"
+}
+```
+
+**2. Update `CHANGELOG.md` — add a new entry at the top:**
+```markdown
+## [16.1.0] — 2026-04-15
+
+### Added
+- `pricing-table` component — `+pricingTable({ plans: [...] })`
+- `faq` component — `+faq({ items: [...] })`
+
+### Fixed
+- per-component detection missed hyphenated component names in some edge cases
+
+### Migration
+No breaking changes. Existing projects are not affected.
+```
+
+**3. Make sure the build passes:**
+```bash
+npm install -g pug-cli sass   # if not already installed
+npm run build
+```
+
+**4. Commit everything:**
+```bash
+git add .
+git commit -m "release: v16.1.0"
+git push
+```
+
+### Publishing the release on GitHub
+
+```
+GitHub repo
+→ Releases
+→ Draft a new release
+→ Tag: v16.1.0          (create new tag on publish)
+→ Target: main
+→ Title: AFS v16.1.0
+→ Description: paste the CHANGELOG entry for this version
+→ Attach binaries: drag in AFS-V16-clean.zip
+→ ✅ Set as the latest release
+→ Publish release
+```
+
+### How team members get the update
+
+They **don't** automatically get it — each project repo is independent.
+
+**For a new project:** always gets the latest because degit/template pulls from `main`.
+
+```bash
+npx degit your-github-username/agency-frontend-system my-new-project
+```
+
+**For an existing project:** team member checks the CHANGELOG, decides which
+changes are worth pulling across manually. There's no automatic update — this is intentional.
+You don't want a build system change silently affecting a client project mid-delivery.
+
+**Manually applying a PATCH fix to an existing project:**
+```bash
+# Example: bug fix in system/build-pug.mjs
+# 1. Open the new version on GitHub
+# 2. Copy the changed file
+# 3. Paste into the project repo
+# 4. Test with npm run build
+# 5. Commit
+git commit -m "chore: apply AFS v16.0.1 build-pug fix"
+```
+
+### Release history at a glance
+
+```
+Releases tab on GitHub shows:
+  v17.0.0  ← latest major (breaking)
+  v16.2.0  ← latest v16 stable
+  v16.1.0
+  v16.0.1  ← patch
+  v16.0.0  ← initial
+```
+
+Attach the ZIP to every release so any version can be downloaded directly
+without needing git.
+
+### Using degit to pull a specific release version
+
+```bash
+# Latest (default)
+npx degit your-github-username/agency-frontend-system my-project
+
+# Specific tag
+npx degit your-github-username/agency-frontend-system#v16.0.0 my-project
+
+# Specific branch
+npx degit your-github-username/agency-frontend-system#dev my-project
+```
+
+This is the main advantage of degit over "Use this template" — you can pin
+to a specific version when a project needs to stay on a known-good baseline.

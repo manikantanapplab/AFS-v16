@@ -23,20 +23,36 @@ Alpine.js interactivity — everything you need from day one.
 
 ## Quick Start
 
+**Option A — degit (recommended)**
+
+Pulls the latest template files with zero git history. Clean slate, instant setup.
+
 ```bash
-# Copy the package into your project folder
-cp -r afs-v16 my-project
+npx degit your-github-username/agency-frontend-system my-project
 cd my-project
 npm install
 npm run dev
 # → http://localhost:3000
 ```
 
+**Option B — GitHub UI**
+
+Go to the repo → click **"Use this template"** → **"Create a new repository"**
+→ clone your new repo → `npm install` → `npm run dev`
+
+**Option C — Download a release**
+
+Go to Releases → download the ZIP for the version you want → extract → `npm install` → `npm run dev`
+
+> Use Option C when you need a specific pinned version, not the latest.
+
+---
+
 **The only file you configure per project:** `afs.config.mjs`
 
 ```js
-export const MODE     = 'per-page';  // CSS delivery mode — see below
-export const CRITICAL = false;       // set true before final delivery
+export const MODE     = 'single';  // CSS delivery mode — see below
+export const CRITICAL = false;     // set true before final delivery
 ```
 
 ---
@@ -346,8 +362,8 @@ safelist: ['show', 'active', 'my-class', /^swiper-/]
 ## New Project Checklist
 
 ```
-□ Copy afs-v16 folder → rename to project name
-□ npm install
+□ npx degit your-github-username/agency-frontend-system my-project
+□ cd my-project && npm install
 □ afs.config.mjs        → set MODE
 □ tokens/_colors.scss   → brand colors
 □ tokens/_typography.scss → font family + update Google Fonts URL in _header.pug

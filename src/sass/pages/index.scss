@@ -1,6 +1,8 @@
 @use 'shared';
 
 @layer components {
+
+  // ── Stats section ─────────────────────────────────────────
   .stats-value {
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 700;
@@ -9,7 +11,9 @@
     margin-bottom: 0.25rem;
   }
 
+  // ── CTA section ───────────────────────────────────────────
   .section-dark {
     background: var(--color-gray-900);
   }
+
 }

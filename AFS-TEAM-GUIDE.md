@@ -26,6 +26,8 @@ npm install -g sass
 
 ## 2. Getting the Project
 
+### Joining an existing project
+
 ```bash
 git clone https://github.com/YOUR_ORG/PROJECT_NAME.git
 cd PROJECT_NAME
@@ -34,8 +36,20 @@ npm run dev
 # → http://localhost:3000
 ```
 
-> **Do not clone the AFS template directly for a client project.**
-> Every project has its own repo. The template is just the starting point.
+### Starting a brand new project from the template
+
+```bash
+npx degit your-github-username/agency-frontend-system my-project
+cd my-project
+npm install
+npm run dev
+```
+
+Or go to the template repo on GitHub → **"Use this template"** → **"Create a new repository"**
+
+> **Never clone the AFS template repo directly into a client project.**
+> Use degit or "Use this template" — these give you a clean copy with no
+> connection to the template's git history.
 
 ---
 

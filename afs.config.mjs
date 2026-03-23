@@ -14,7 +14,7 @@
 // 'per-component' → base.css + each component loads its own CSS
 //                   best for: Drupal/WP/Laravel/.NET
 
-export const MODE = 'per-page'; // ← change this
+export const MODE = 'single'; // most projects start here — change if needed
 
 // ── 2. CRITICAL CSS ──────────────────────────────────────────
 // true  → inlines above-fold CSS, defers rest (Lighthouse friendly)

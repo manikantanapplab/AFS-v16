@@ -4,13 +4,9 @@
 @use '../utilities/generated' as generated;
 
 @include generated.emit-generated-utilities(
-  (2, 5),
-  (48),
+  (5),
   (),
-  (
-  "mb": (4),
-  "mt": (2, 3),
-  "py": (5),
-),
+  (),
+  (),
   ()
 );
