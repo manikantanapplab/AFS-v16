@@ -1,0 +1,22 @@
+//- Testimonial — usage: +testimonial({ quote: '', author: '', role: '', company: '' })
+//- Simple: +testimonial({ title: '', text: '' })
+mixin testimonial(data)
+  section.testimonial
+    .container
+      .testimonial-inner
+        .testimonial-mark "
+        if data.quote || data.title
+          blockquote.testimonial-quote= data.quote || data.title
+        if data.text
+          p.testimonial-body= data.text
+        if data.author
+          .testimonial-author
+            if data.avatar
+              img.testimonial-avatar(src=data.avatar alt=data.author)
+            .testimonial-meta
+              strong.testimonial-name= data.author
+              if data.role
+                span.testimonial-role= data.role
+              if data.company
+                span.testimonial-company= data.company
+        block

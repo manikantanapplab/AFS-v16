@@ -1,0 +1,122 @@
+//- ============================================================
+//- SWIPER COMPONENT — Swiper.js 11
+//- Docs: https://swiperjs.com/swiper-api
+//- ============================================================
+//-
+//- BASIC USAGE
+//- +swiper({ slides: slides })
+//-
+//- ALL OPTIONS
+//- +swiper({
+//-   slides:    slides,         // required
+//-   id:        'hero-swiper',  // unique id — required if multiple on same page
+//-   effect:    'slide',        // 'slide' | 'fade' | 'cube' | 'flip' | 'cards'
+//-   perView:   1,              // slides visible at once (desktop)
+//-   perViewMd: 2,              // slides at 768px+
+//-   perViewLg: 3,              // slides at 1200px+
+//-   gap:       24,             // gap between slides in px
+//-   loop:      true,           // default: true
+//-   autoplay:  false,          // default: false
+//-   interval:  4000,           // autoplay delay ms
+//-   arrows:    true,           // prev/next buttons
+//-   dots:      true,           // pagination dots
+//-   thumbs:    false,          // thumbnail nav (requires thumbsId)
+//-   thumbsId:  'my-thumbs',    // id of the thumbs swiper instance
+//-   centered:  false,          // center active slide
+//-   peek:      false,          // show edges of adjacent slides
+//- })
+//-
+//- SLIDE OBJECT SHAPE
+//- {
+//-   image: 'assets/img/slide.jpg',
+//-   alt:   'Description',
+//-   tag:   'Label',
+//-   title: 'Slide Title',
+//-   text:  'Description text',
+//-   btn:   { label: 'CTA', link: '#' }
+//- }
+//-
+//- THUMBNAILS EXAMPLE
+//- +swiper({ slides: slides, id: 'main', thumbs: true, thumbsId: 'thumbs' })
+//- +swiperThumbs({ slides: slides, id: 'thumbs' })
+//- ============================================================
+
+mixin swiper(data)
+  - const id        = data.id       || 'swiper-' + Math.random().toString(36).slice(2,7)
+  - const effect    = data.effect   || 'slide'
+  - const perView   = data.perView  || 1
+  - const perViewMd = data.perViewMd || perView
+  - const perViewLg = data.perViewLg || perViewMd
+  - const gap       = data.gap      !== undefined ? data.gap : 0
+  - const loop      = data.loop     !== undefined ? data.loop : true
+  - const autoplay  = data.autoplay !== undefined ? data.autoplay : false
+  - const interval  = data.interval || 4000
+  - const arrows    = data.arrows   !== undefined ? data.arrows : true
+  - const dots      = data.dots     !== undefined ? data.dots : true
+  - const centered  = data.centered || false
+  - const peek      = data.peek     || false
+  - const slides    = data.slides   || []
+
+  .swiper-wrap
+    .swiper(
+      id=id
+      data-effect=effect
+      data-per-view=perView
+      data-per-view-md=perViewMd
+      data-per-view-lg=perViewLg
+      data-gap=gap
+      data-loop=loop
+      data-autoplay=autoplay
+      data-interval=interval
+      data-centered=centered
+      data-peek=peek
+      data-thumbs-id=data.thumbsId || ''
+    )
+      .swiper-wrapper
+        each slide, i in slides
+          .swiper-slide
+            if slide.image
+              img(src=slide.image alt=slide.alt || slide.title || `Slide ${i + 1}`)
+
+            if slide.tag || slide.title || slide.text || slide.btn
+              .swiper-slide-content
+                if slide.tag
+                  span.swiper-tag= slide.tag
+                if slide.title
+                  h2.swiper-title= slide.title
+                if slide.text
+                  p.swiper-text= slide.text
+                if slide.btn
+                  a.btn.btn-primary(href=slide.btn.link)= slide.btn.label
+
+            block slide
+
+    if arrows
+      button.swiper-btn.swiper-btn-prev(
+        aria-label='Previous slide'
+        type='button'
+      )
+        i.bi.bi-chevron-left(aria-hidden='true')
+      button.swiper-btn.swiper-btn-next(
+        aria-label='Next slide'
+        type='button'
+      )
+        i.bi.bi-chevron-right(aria-hidden='true')
+
+    if dots
+      .swiper-pagination
+
+
+//- ── Thumbnails swiper ───────────────────────────────────────
+mixin swiperThumbs(data)
+  - const id     = data.id || 'swiper-thumbs'
+  - const slides = data.slides || []
+
+  .swiper.swiper-thumbs-strip(id=id)
+    .swiper-wrapper
+      each slide, i in slides
+        .swiper-slide.swiper-thumb-slide
+          if slide.image
+            img(src=slide.image alt=slide.alt || slide.title || `Thumb ${i + 1}`)
+          else if slide.title
+            span= slide.title

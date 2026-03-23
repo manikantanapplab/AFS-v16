@@ -1,0 +1,38 @@
+// AUTO-GENERATED — do not edit manually
+// Edit files in src/components/, src/sass/layers/
+// Regenerated every time you run dev or build
+
+@use 'base/layers';
+@use 'base/bootstrap';
+@use 'tokens/colors';
+@use 'tokens/spacing';
+@use 'tokens/typography';
+@use 'base/reset';
+@use 'base/base';
+@use '../layouts/header';
+@use 'base/footer';
+
+// Components (11 found)
+@use '../components/apicard/apicard.utilities.generated';
+@use '../components/app-head/app-head.utilities.generated';
+@use '../components/breadcrumb/breadcrumb.utilities.generated';
+@use '../components/button/button.utilities.generated';
+@use '../components/card/card.utilities.generated';
+@use '../components/carousel/carousel.utilities.generated';
+@use '../components/hero/hero.utilities.generated';
+@use '../components/page-aside/page-aside.utilities.generated';
+@use '../components/section/section.utilities.generated';
+@use '../components/swiper/swiper.utilities.generated';
+@use '../components/testimonial/testimonial.utilities.generated';
+
+// Page utilities (4 found)
+@use 'pages/about.utilities.generated';
+@use 'pages/contact.utilities.generated';
+@use 'pages/index.utilities.generated';
+@use 'pages/services.utilities.generated';
+
+// Page styles (0 found)
+// none yet — run: npm run page <name>
+
+@use 'utilities/functions';
+@use 'utilities/mixins';

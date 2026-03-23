@@ -1,0 +1,217 @@
+// ============================================================
+// MIXINS & FLUID UTILITIES — AFS v16
+// ============================================================
+@use "sass:math";
+
+
+// ── PX TO REM ────────────────────────────────────────────────
+// font-size: rem(28);  →  1.75rem
+@function rem($px) {
+  @if type-of($px) != 'number' {
+    @error "rem(): expected a number, got #{type-of($px)}";
+  }
+  @return math.div($px, 16) * 1rem;
+}
+
+
+// ── FLUID HELPERS (internal) ─────────────────────────────────
+@function _len($v) {
+  @if type-of($v) != 'number' {
+    @error "_len(): expected number, got #{type-of($v)}";
+  }
+  @return if(unit($v) == '', $v * 1px, $v);
+}
+
+@function _unit-type($v) {
+  $u: unit($v);
+  @if $u == 'px' { @return 'px'; }
+  @if $u == 'vw' { @return 'vw'; }
+  @if $u == '%'  { @return '%';  }
+  @return 'other';
+}
+
+@function fluid-value($min, $max, $vmin: 320px, $vmax: 1920px) {
+  $uMin: _unit-type($min);
+  $uMax: _unit-type($max);
+
+  @if $uMin != $uMax {
+    @error "fluid-value(): $min and $max must share the same unit (got #{unit($min)} and #{unit($max)}).";
+  }
+  @if $uMin == '%' {
+    @error "fluid-value(): % units not supported. Use px or vw.";
+  }
+  @if $uMin == 'other' {
+    @error "fluid-value(): unsupported unit '#{unit($min)}'. Use px or vw.";
+  }
+
+  $v1: math.div(_len($vmin), 1px);
+  $v2: math.div(_len($vmax), 1px);
+
+  @if $v1 == $v2 { @error "fluid-value(): vmin and vmax must differ."; }
+
+  @if $uMin == 'px' {
+    $minN: math.div($min, 1px);
+    $maxN: math.div($max, 1px);
+    $m:    math.div(($maxN - $minN), ($v2 - $v1));
+    $b:    $minN - $m * $v1;
+    $loN:  math.min($minN, $maxN);
+    $hiN:  math.max($minN, $maxN);
+    @return clamp(#{$loN * 1px}, calc(#{$b * 1px} + #{$m * 100}vw), #{$hiN * 1px});
+  }
+
+  @else if $uMin == 'vw' {
+    $minN: math.div($min, 1vw);
+    $maxN: math.div($max, 1vw);
+    $m:    math.div(($maxN - $minN), ($v2 - $v1));
+    $b:    $minN - $m * $v1;
+    $loN:  math.min($minN, $maxN);
+    $hiN:  math.max($minN, $maxN);
+    @return clamp(#{$loN * 1vw}, calc(#{$b * 1vw} + #{$m * 100}vw), #{$hiN * 1vw});
+  }
+}
+
+// fluid-px() — fluid sizing using px values directly
+// font-size: fluid-px(28, 48);
+@function fluid-px($min-px, $max-px, $vmin: 320px, $vmax: 1920px) {
+  @return fluid-value($min-px * 1px, $max-px * 1px, $vmin, $vmax);
+}
+
+
+// ── FLUID STEPS ──────────────────────────────────────────────
+// @include fluid-steps(font-size, (32px, 48px, 64px));
+// @include fluid-steps(padding, (16px, 24px, 40px, 56px));
+// @include fluid-steps((font-size, line-height), (32px, 52px));
+// @include fluid-steps(font-size, (32px, 52px), (375px, 1440px));
+
+@mixin _fluid-steps-one($prop, $vals, $bps, $important: false) {
+  $important-suffix: if($important, ' !important', '');
+  $nVals: length($vals);
+  $nBps:  length($bps);
+
+  @if $nVals < 2 or $nVals > 4 {
+    @error "fluid-steps(): $vals must have 2–4 values, got #{$nVals}.";
+  }
+  @if $nBps < 2 {
+    @error "fluid-steps(): $bps must have ≥2 breakpoints, got #{$nBps}.";
+  }
+
+  $bp1: _len(nth($bps, 1));
+  $bpL: _len(nth($bps, $nBps));
+
+  @if math.div($bp1, 1px) >= math.div($bpL, 1px) {
+    @error "fluid-steps(): breakpoints must be strictly ascending.";
+  }
+
+  @if $nVals == 2 {
+    #{$prop}: #{fluid-value(nth($vals, 1), nth($vals, 2), $bp1, $bpL)}#{$important-suffix};
+  }
+
+  @else if $nVals == 3 {
+    $bpM: _len(
+      if($nBps >= 3, nth($bps, 2),
+        math.div((math.div($bp1, 1px) + math.div($bpL, 1px)), 2) * 1px)
+    );
+    #{$prop}: #{fluid-value(nth($vals, 1), nth($vals, 2), $bp1, $bpM)}#{$important-suffix};
+    @media (min-width: #{$bpM}) {
+      #{$prop}: #{fluid-value(nth($vals, 2), nth($vals, 3), $bpM, $bpL)}#{$important-suffix};
+    }
+  }
+
+  @else {
+    @if $nBps < 4 {
+      @error "fluid-steps(): 4 values need ≥4 breakpoints (got #{$nBps}).";
+    }
+    $bp2: _len(nth($bps, 2));
+    $bp3: _len(nth($bps, 3));
+    #{$prop}: #{fluid-value(nth($vals, 1), nth($vals, 2), $bp1, $bp2)}#{$important-suffix};
+    @media (min-width: #{$bp2}) {
+      #{$prop}: #{fluid-value(nth($vals, 2), nth($vals, 3), $bp2, $bp3)}#{$important-suffix};
+    }
+    @media (min-width: #{$bp3}) {
+      #{$prop}: #{fluid-value(nth($vals, 3), nth($vals, 4), $bp3, $bpL)}#{$important-suffix};
+    }
+  }
+}
+
+@mixin fluid-steps($props, $vals, $bps: (320px, 768px, 1200px, 1920px), $important: false) {
+  $props-list: if(type-of($props) == 'list', $props, ($props,));
+  @each $prop in $props-list {
+    @include _fluid-steps-one($prop, $vals, $bps, $important);
+  }
+}
+
+// Simple 2-point shorthand — backward compatible
+@mixin fluid($prop, $min, $max, $vmin: 320px, $vmax: 1920px, $important: false) {
+  @include fluid-steps($prop, ($min, $max), ($vmin, $vmax), $important);
+}
+
+
+// ── LAYOUT ───────────────────────────────────────────────────
+@mixin size($w, $h: $w) {
+  width: $w;
+  height: $h;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin img-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+
+// ── TYPOGRAPHY ───────────────────────────────────────────────
+@mixin truncate($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+// ── INTERACTION ──────────────────────────────────────────────
+@mixin hover-anim($duration: 300ms, $easing: ease) {
+  transition: all $duration $easing;
+}
+
+
+// ── RTL-AWARE ────────────────────────────────────────────────
+@mixin margin-inline($start, $end: $start) {
+  margin-inline-start: $start;
+  margin-inline-end: $end;
+}
+
+@mixin padding-inline($start, $end: $start) {
+  padding-inline-start: $start;
+  padding-inline-end: $end;
+}

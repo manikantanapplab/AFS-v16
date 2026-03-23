@@ -1,0 +1,98 @@
+//- ============================================================
+//- CAROUSEL COMPONENT — Alpine.js, no dependencies
+//- ============================================================
+//-
+//- BASIC USAGE
+//- +carousel({ slides: slides })
+//-
+//- ALL OPTIONS
+//- +carousel({
+//-   slides:   slides,       // required — array of slide objects
+//-   autoplay: true,         // default: false
+//-   interval: 4000,         // autoplay ms — default: 4000
+//-   loop:     true,         // default: true
+//-   arrows:   true,         // default: true
+//-   dots:     true,         // default: true
+//-   id:       'my-slider'   // default: 'carousel'
+//- })
+//-
+//- SLIDE OBJECT SHAPE
+//- {
+//-   image: 'assets/img/slide.jpg',
+//-   alt:   'Description',
+//-   tag:   'Label',
+//-   title: 'Slide Title',
+//-   text:  'Description text',
+//-   btn:   { label: 'CTA', link: '#' }
+//- }
+//- ============================================================
+
+mixin carousel(data)
+  - const id       = data.id       || 'carousel'
+  - const autoplay = data.autoplay !== undefined ? data.autoplay : false
+  - const interval = data.interval || 4000
+  - const loop     = data.loop     !== undefined ? data.loop     : true
+  - const arrows   = data.arrows   !== undefined ? data.arrows   : true
+  - const dots     = data.dots     !== undefined ? data.dots     : true
+  - const slides   = data.slides   || []
+  - const count    = slides.length
+
+  .carousel(
+    id=id
+    x-data=`carousel({ count: ${count}, autoplay: ${autoplay}, interval: ${interval}, loop: ${loop} })`
+    role='region'
+    aria-label=data.label || 'Carousel'
+    aria-roledescription='carousel'
+  )
+    .carousel-track-wrap(aria-live='polite')
+      .carousel-track(
+        :style="'transform: translateX(-' + (active * 100) + '%)'"
+      )
+        each slide, i in slides
+          .carousel-slide(
+            role='group'
+            aria-roledescription='slide'
+            aria-label=`${i + 1} of ${count}`
+            :aria-hidden=`active !== ${i}`
+          )
+            if slide.image
+              .carousel-slide-img(style=`background-image: url(${slide.image})`)
+                span.visually-hidden= slide.alt || slide.title || `Slide ${i + 1}`
+            if slide.tag || slide.title || slide.text || slide.btn
+              .carousel-slide-content
+                if slide.tag
+                  span.carousel-tag= slide.tag
+                if slide.title
+                  h2.carousel-title= slide.title
+                if slide.text
+                  p.carousel-text= slide.text
+                if slide.btn
+                  a.btn.btn-primary(href=slide.btn.link)= slide.btn.label
+            block slide
+
+    if arrows
+      button.carousel-arrow.carousel-arrow-prev(
+        @click='prev'
+        :disabled='!_loop && isFirst()'
+        aria-label='Previous slide'
+        type='button'
+      )
+        i.bi.bi-chevron-left(aria-hidden='true')
+      button.carousel-arrow.carousel-arrow-next(
+        @click='next'
+        :disabled='!_loop && isLast()'
+        aria-label='Next slide'
+        type='button'
+      )
+        i.bi.bi-chevron-right(aria-hidden='true')
+
+    if dots
+      .carousel-dots(role='tablist' aria-label='Slides')
+        each slide, i in slides
+          button.carousel-dot(
+            role='tab'
+            :aria-selected=`active === ${i}`
+            @click=`goTo(${i})`
+            :class=`{ 'is-active': active === ${i} }`
+            type='button'
+          )

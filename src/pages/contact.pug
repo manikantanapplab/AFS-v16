@@ -1,0 +1,98 @@
+extends ../layouts/_base.pug
+
+block pagecss
+  link(rel="stylesheet" href="assets/css/pages/contact.css")
+
+block componentcss
+
+block title
+  | Contact | Company Name
+
+block content
+  include ../components/breadcrumb/_breadcrumb.pug
+
+  //- ── BREADCRUMB ─────────────────────────────────────────────
+  +breadcrumb({ items: [{ label: 'Home', link: 'index.html' }, { label: 'Contact' }] })
+
+  //- ── CONTACT MAIN ───────────────────────────────────────────
+  section.section
+    .container
+      .row.g-5
+        //- ── Left: info ──────────────────────────────────────
+        .col-lg-5
+          span.section-tag Get in touch
+          h1.section-title.mt-2 Let's talk.
+          p.section-text.mt-3 Replace this with a short, welcoming message. Tell visitors what to expect when they reach out — response time, next steps, etc.
+
+          .mt-4.d-flex.flex-column.gap-3
+            .d-flex.align-items-start.gap-3
+              i.bi.bi-envelope.fs-20(style='color:var(--color-primary);margin-top:2px')
+              div
+                p.fw-semibold.mb-0 Email
+                a.text-muted(href='mailto:hello@yourcompany.com') hello@yourcompany.com
+            .d-flex.align-items-start.gap-3
+              i.bi.bi-telephone.fs-20(style='color:var(--color-primary);margin-top:2px')
+              div
+                p.fw-semibold.mb-0 Phone
+                a.text-muted(href='tel:+97400000000') +974 0000 0000
+            .d-flex.align-items-start.gap-3
+              i.bi.bi-geo-alt.fs-20(style='color:var(--color-primary);margin-top:2px')
+              div
+                p.fw-semibold.mb-0 Office
+                p.text-muted.mb-0 Street address, City, Country
+
+        //- ── Right: form ─────────────────────────────────────
+        .col-lg-7
+          .p-4.p-lg-5(
+            style='border:1px solid var(--color-border);border-radius:1rem;background:var(--color-bg-subtle)'
+          )
+            h3.fs-20.fw-semibold.mb-4 Send us a message
+
+            //- NOTE: Wire this form up to your backend / form service
+            div(x-data="form" @submit.prevent="submit")
+              .row.g-3
+                .col-sm-6
+                  label.form-label(for='name') Full name
+                  input#name.form-control(
+                    type='text'
+                    name='name'
+                    placeholder='Your name'
+                    required
+                    x-model='fields.name'
+                  )
+                .col-sm-6
+                  label.form-label(for='email') Email address
+                  input#email.form-control(
+                    type='email'
+                    name='email'
+                    placeholder='you@example.com'
+                    required
+                    x-model='fields.email'
+                  )
+                .col-12
+                  label.form-label(for='subject') Subject
+                  input#subject.form-control(
+                    type='text'
+                    name='subject'
+                    placeholder='How can we help?'
+                    x-model='fields.subject'
+                  )
+                .col-12
+                  label.form-label(for='message') Message
+                  textarea#message.form-control(
+                    name='message'
+                    rows='5'
+                    placeholder='Tell us about your project or question...'
+                    required
+                    x-model='fields.message'
+                  )
+                .col-12
+                  button.btn.btn-primary.w-100(
+                    type='button'
+                    @click='submit'
+                    :disabled='loading'
+                  )
+                    span(x-show='!loading') Send message
+                    span(x-show='loading') Sending...
+                  p.mt-3.text-success.mb-0(x-show='success') Message sent — we will be in touch shortly.
+                  p.mt-3.text-danger.mb-0(x-show='error') Something went wrong. Please try again or email us directly.

@@ -1,0 +1,71 @@
+extends ../layouts/_base.pug
+
+block pagecss
+  link(rel="stylesheet" href="assets/css/pages/index.css")
+
+block componentcss
+
+block title
+  | Home | Company Name
+
+block content
+  include ../components/hero/_hero.pug
+  include ../components/card/_card.pug
+  include ../components/testimonial/_testimonial.pug
+  include ../components/section/_section.pug
+
+  //- ── HERO ───────────────────────────────────────────────────
+  +hero({
+    eyebrow: 'Welcome',
+    title: 'Your headline goes here.',
+    text: 'Supporting description. Keep it concise and focused on the value you deliver to your audience.',
+    primaryBtn: { label: 'Get started', link: '#contact' },
+    secondaryBtn: { label: 'Learn more', link: 'about.html' }
+  })
+
+  //- ── STATS ──────────────────────────────────────────────────
+  section.section.section-muted
+    .container
+      .row.g-4.text-center
+        -
+          var stats = [
+            { value: '10+', label: 'Years experience' },
+            { value: '200+', label: 'Projects delivered' },
+            { value: '50+', label: 'Team members' },
+            { value: '98%', label: 'Client satisfaction' }
+          ]
+        each s in stats
+          .col-6.col-md-3
+            .py-4
+              p.fs-40.fw-bold.mb-1(style='color:var(--color-primary)') #{s.value}
+              p.text-muted.mb-0.fs-14 #{s.label}
+
+  //- ── SERVICES ───────────────────────────────────────────────
+  section.section
+    .container
+      .section-header.centered
+        span.section-tag What we do
+        h2.section-title Our core services.
+        p.section-text A short sentence describing what your team or company specialises in.
+      -
+        var services = [
+          { tag: 'Strategy', title: 'Service One', text: 'Short description of this service and the value it delivers to clients. Replace with real content.' },
+          { tag: 'Design', title: 'Service Two', text: 'Short description of this service and the value it delivers to clients. Replace with real content.' },
+          { tag: 'Delivery', title: 'Service Three', text: 'Short description of this service and the value it delivers to clients. Replace with real content.' }
+        ]
+      +cardGrid(services, 3)
+
+  //- ── TESTIMONIAL ────────────────────────────────────────────
+  +testimonial({
+    quote: 'Replace this with a real client quote. Keep it short, specific, and outcome-focused.',
+    author: 'Client Name',
+    role: 'Job Title',
+    company: 'Company Name'
+  })
+
+  //- ── CTA ────────────────────────────────────────────────────
+  section#contact.section.section-dark
+    .container.text-center
+      h2.section-title.text-white Ready to get started?
+      p.section-text(style='color:rgba(255,255,255,0.6);margin-bottom:2rem') Replace this with your actual call to action.
+      a.btn.btn-primary.btn-lg(href='contact.html') Get in touch

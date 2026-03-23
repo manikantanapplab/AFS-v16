@@ -1,0 +1,12 @@
+// PER-COMPONENT MODE — base CSS loaded on every page
+@use 'layers';
+@use 'bootstrap';
+@use '../tokens/colors';
+@use '../tokens/spacing';
+@use '../tokens/typography';
+@use 'reset';
+@use 'base';
+@use '../../layouts/header';
+@use '../utilities/functions';
+@use '../utilities/mixins';
+@use 'footer';

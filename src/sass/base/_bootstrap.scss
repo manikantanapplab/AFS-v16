@@ -1,0 +1,8 @@
+// Bootstrap wrapped in @layer bootstrap
+// This makes Bootstrap participate in the cascade layer order,
+// so your component styles correctly override it.
+@use "sass:meta";
+
+@layer bootstrap {
+  @include meta.load-css('../../../node_modules/bootstrap/scss/bootstrap');
+}

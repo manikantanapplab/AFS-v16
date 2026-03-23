@@ -1,0 +1,84 @@
+extends ../layouts/_base.pug
+
+block pagecss
+  link(rel="stylesheet" href="assets/css/pages/about.css")
+
+block componentcss
+
+block title
+  | About | Company Name
+
+block content
+  include ../components/breadcrumb/_breadcrumb.pug
+  include ../components/hero/_hero.pug
+  include ../components/card/_card.pug
+  include ../components/testimonial/_testimonial.pug
+
+  //- ── BREADCRUMB ─────────────────────────────────────────────
+  +breadcrumb({ items: [{ label: 'Home', link: 'index.html' }, { label: 'About' }] })
+
+  //- ── HERO ───────────────────────────────────────────────────
+  +hero({
+    eyebrow: 'About us',
+    title: 'Who we are.',
+    text: 'A short paragraph about your company, what you stand for, and what makes you different. Keep this to 2–3 sentences.',
+    dark: true
+  })
+
+  //- ── MISSION / VALUES ───────────────────────────────────────
+  section.section
+    .container
+      .row.g-5.align-items-center
+        .col-lg-5
+          span.section-tag Our mission
+          h2.section-title.mt-2 What drives us.
+          p.section-text Replace this with a paragraph about your company's mission or values. What problem do you solve? Why does it matter?
+          p.section-text Add a second paragraph if needed. Keep it genuine — avoid corporate filler.
+        .col-lg-7
+          .row.g-4
+            -
+              var values = [
+                { icon: 'bi-eye', title: 'Value One', text: 'One sentence explaining this value and how it shows up in your work.' },
+                { icon: 'bi-people', title: 'Value Two', text: 'One sentence explaining this value and how it shows up in your work.' },
+                { icon: 'bi-tools', title: 'Value Three', text: 'One sentence explaining this value and how it shows up in your work.' },
+                { icon: 'bi-award', title: 'Value Four', text: 'One sentence explaining this value and how it shows up in your work.' }
+              ]
+            each v in values
+              .col-sm-6
+                .p-3(style='border:1px solid var(--color-border);border-radius:0.75rem;height:100%')
+                  i.bi.fs-24.d-block.mb-2(class=v.icon style='color:var(--color-primary)')
+                  h4.fs-16.fw-semibold.mb-1 #{v.title}
+                  p.text-muted.mb-0.fs-14 #{v.text}
+
+  //- ── TEAM ───────────────────────────────────────────────────
+  section.section.section-muted
+    .container
+      .section-header.centered
+        span.section-tag The team
+        h2.section-title Meet the people behind the work.
+      -
+        var team = [
+          { name: 'Team Member', role: 'Role / Title', bio: 'One or two sentences about this person — their background, expertise, and what they bring to the team.' },
+          { name: 'Team Member', role: 'Role / Title', bio: 'One or two sentences about this person — their background, expertise, and what they bring to the team.' },
+          { name: 'Team Member', role: 'Role / Title', bio: 'One or two sentences about this person — their background, expertise, and what they bring to the team.' },
+          { name: 'Team Member', role: 'Role / Title', bio: 'One or two sentences about this person — their background, expertise, and what they bring to the team.' }
+        ]
+      .row.g-4.mt-2
+        each p in team
+          .col-sm-6.col-lg-3
+            .p-4.text-center(style='border:1px solid var(--color-border);border-radius:0.75rem;height:100%')
+              .rounded-circle.mx-auto.mb-3.d-flex.align-items-center.justify-content-center(
+                style='width:64px;height:64px;background:var(--color-primary);color:#fff;font-size:1.25rem;font-weight:700'
+              )
+                | #{p.name.split(' ').map(function(w){return w[0]}).join('')}
+              h4.fs-16.fw-semibold.mb-1 #{p.name}
+              p.text-muted.fs-13.mb-2 #{p.role}
+              p.fs-14.mb-0 #{p.bio}
+
+  //- ── TESTIMONIAL ────────────────────────────────────────────
+  +testimonial({
+    quote: 'Replace this with a real client or partner quote about working with your team.',
+    author: 'Client Name',
+    role: 'Job Title',
+    company: 'Company Name'
+  })

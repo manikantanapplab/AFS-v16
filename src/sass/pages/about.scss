@@ -1,0 +1,20 @@
+@use 'shared';
+
+@layer components {
+
+  // ── Team card avatar initials ─────────────────────────────
+  .team-avatar-initials {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+  }
+
+}

@@ -1,0 +1,23 @@
+@use "sass:map";
+
+@layer utilities {
+  $color-map: (
+    "primary": var(--color-primary),
+    "secondary": var(--color-secondary),
+    "success": var(--color-success),
+    "warning": var(--color-warning),
+    "error": var(--color-error),
+    "white": var(--color-white),
+    "black": var(--color-black),
+  );
+
+  @each $name, $color in $color-map {
+    .bg-#{$name} {
+      background-color: #{$color} !important;
+    }
+
+    .text-#{$name} {
+      color: #{$color} !important;
+    }
+  }
+}

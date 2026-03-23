@@ -1,0 +1,30 @@
+//- AppHead component — usage: +app-head({ title: '', text: '' })
+mixin app-head(data)
+  section.app-head(class=data.class || '')
+    .row
+      .col
+        .d-flex
+          .flex-shrink-0
+            if data.icon
+              img.app-head-icon(src=data.icon alt='Icon' width='40' height='40')
+          .flex-grow-1
+            if data.title
+              h2.app-head-title(class=data.titleClass || '')= data.title
+            if data.text
+              p.app-head-text(class=data.textClass || '')= data.text
+      .col-auto
+        ul.utility-actions.d-flex.gap-24.flex-wrap.g-24 
+          li
+            a.btn.btn-outline-gray-1.rounded-circle.size-48(href='#' aria-label='Notifications')
+              i.bi.bi-bell-fill
+          li.dropdown
+            a.nav-link.profile-drop.d-flex.align-items-center.dropdown-toggle(href="#", role="button", data-bs-toggle="dropdown", aria-expanded="false")
+              .flex-shrink-0.profile-img
+                img.rounded-circle(src="https://randomuser.me/api/portraits/women/3.jpg" alt="User Avatar" width="40" height="40")
+              .flex-grow-1
+                h6.mb-0 Fahd Naim
+                p.mb-0 Publisher
+            ul.dropdown-menu
+              li
+                a.dropdown-item(href="#") Action
+    block

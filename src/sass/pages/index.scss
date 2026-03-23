@@ -1,0 +1,15 @@
+@use 'shared';
+
+@layer components {
+  .stats-value {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .section-dark {
+    background: var(--color-gray-900);
+  }
+}

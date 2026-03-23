@@ -1,0 +1,18 @@
+//- Breadcrumb — usage:
+//- - var crumbs = [
+//-     { label: 'Home', link: '/' },
+//-     { label: 'API Catalogue', link: '/api-catalogue' },
+//-     { label: 'Current Page' }
+//- ]
+//- +breadcrumb({ items: crumbs })
+
+mixin breadcrumb(data)
+  - const items = data.items || []
+  nav.breadcrumb-wrapper(aria-label='breadcrumb')
+    ol.breadcrumb
+      each item, i in items
+        li.breadcrumb-item(class=i === items.length - 1 ? 'is-active' : '')
+          if i === items.length - 1
+            span= item.label
+          else
+            a(href=item.link)= item.label

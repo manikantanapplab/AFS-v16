@@ -1,0 +1,39 @@
+//- ============================================================
+//- CARD COMPONENT — Pug Mixin
+//- Usage:
+//-   +card({ title: 'Hello', text: 'World', tag: 'News', image: 'img.jpg', link: '#' })
+//-   +card({ title: 'No image card', text: 'Content here' })
+//-   +card({ title: 'Featured', tag: 'Top', featured: true })
+//- ============================================================
+
+mixin card(data)
+  article.card(class=data.featured ? 'card-featured' : '' class=data.horizontal ? 'card-horizontal' : '' class=data.horizontal ? 'card-normal' : '')
+    if data.image
+      .card-image
+        img(src=data.image alt=data.title loading='lazy')
+    .card-body
+      if data.tag
+        span.card-tag= data.tag
+      h3.card-title.fs-16f18f26= data.title
+      if data.text
+        p.card-text= data.text
+      if data.link || data.date
+        .card-footer
+          if data.date
+            span.card-date= data.date
+          if data.link
+            a.btn.btn-primary(href=data.link) Read More
+
+
+//- ============================================================
+//- CARD GRID — loop from data array
+//- Usage:
+//-   +cardGrid(cardsArray)
+//- ============================================================
+
+mixin cardGrid(cards, cols)
+  - const colClass = cols || 3
+  .row
+    each card in cards
+      .col-12.col-md-6(class=`col-lg-${12 / colClass}`)
+        +card(card)

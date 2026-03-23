@@ -1,0 +1,21 @@
+//- PageAside component — usage: +page-aside({ title: '', text: '' })
+include ../nav/_nav.pug
+
+mixin page-aside(data)
+  aside.page-aside
+    a.navbar-brand.nav-logo(href="/")
+      img(src="assets/images/page-logo.svg" alt="Logo" height="80")
+    #mainNav.page-nav
+      h6.nav-title Menu
+      +navLinks([
+        { icon: 'assets/images/icon-placeholder-1.svg', label: 'Dashboard', href: '#', active: true },
+        { icon: 'assets/images/icon-catalogue.svg', label: 'API Catalogue', href: '#' },
+        { icon: 'assets/images/icon-placeholder-1.svg', label: 'My Requests Status', href: '#' },
+        { icon: 'assets/images/icon-placeholder-1.svg', label: 'My Subscriptions', href: '#' },
+        { icon: 'assets/images/icon-placeholder-1.svg', label: 'My Bookmarks', href: '#' },
+      ], 'nav-links flex-column')
+      hr
+      h6.nav-title SETTINGS
+      +navLinks([
+        { icon: 'assets/images/logout.svg', label: 'Logout', href: '#' },
+      ], 'nav-links flex-column')

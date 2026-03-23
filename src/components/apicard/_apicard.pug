@@ -1,0 +1,60 @@
+//- API Card component — usage: +apiCard(data)
+//-
+//- +apiCard({
+//-   category:    'Human Resources',
+//-   categoryIcon: 'assets/images/icon-hr.svg',
+//-   title:       'QE Employees List',
+//-   version:     'v1.0',
+//-   text:        'Access real-time and historical weather data...',
+//-   author: {
+//-     name:   'Sarah Chen',
+//-     role:   'Publisher',
+//-     avatar: 'assets/images/avatar.jpg',
+//-     staffId: 'QE9438274'
+//-   },
+//-   date:        'May 01, 2024',
+//-   bookmarked:  false
+//- })
+
+mixin apiCard(data)
+  - const author = data.author || {}
+  article.api-card
+    //- ── Header ──────────────────────────────
+    .api-card-header
+      .api-card-category
+        if data.categoryIcon
+          img.api-card-category-icon(src=data.categoryIcon alt='' aria-hidden='true')
+        span.api-card-category-name= data.category
+
+      button.api-card-bookmark(
+        type='button'
+        aria-label='Bookmark'
+        class=data.bookmarked ? 'is-bookmarked' : ''
+      )
+        i.bi.bi-bookmark(aria-hidden='true')
+
+    //- ── Title ───────────────────────────────
+    .api-card-title-row
+      h3.api-card-title= data.title
+      if data.version
+        span.api-card-version= data.version
+
+    //- ── Description ─────────────────────────
+    if data.text
+      p.api-card-text= data.text
+
+    //- ── Footer ──────────────────────────────
+    .api-card-footer
+      .api-card-author
+        if author.avatar
+          img.api-card-avatar(src=author.avatar alt=author.name width='40' height='40')
+        .api-card-author-info
+          .api-card-author-top
+            span.api-card-author-name= author.name
+            if author.role
+              span.api-card-role= author.role
+          if author.staffId
+            span.api-card-staff-id= 'Staff ID: ' + author.staffId
+
+      if data.date
+        span.api-card-date= data.date

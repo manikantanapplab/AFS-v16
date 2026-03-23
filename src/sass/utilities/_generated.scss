@@ -1,0 +1,151 @@
+@use "sass:list";
+@use "sass:map";
+@use "sass:math";
+@use "sass:string";
+@use '../utilities/mixins' as *;
+
+@function _fluid-class-name($vals) {
+  $name: null;
+
+  @each $val in $vals {
+    @if unit($val) != '' and unit($val) != 'px' {
+      @error "_fluid-class-name(): only unitless or px values are supported.";
+    }
+
+    $num: if(unit($val) == 'px', math.div($val, 1px), $val);
+    $name: if($name == null, '#{$num}', '#{$name}f#{$num}');
+  }
+
+  @return $name;
+}
+
+@function _fluid-values($vals) {
+  $sizes: ();
+
+  @each $val in $vals {
+    @if unit($val) != '' and unit($val) != 'px' {
+      @error "_fluid-values(): only unitless or px values are supported.";
+    }
+
+    $sizes: list.append($sizes, if(unit($val) == '', $val * 1px, $val));
+  }
+
+  @return $sizes;
+}
+
+@mixin emit-generated-utilities(
+  $gap-utilities: (),
+  $fixed-font-size-utilities: (),
+  $fluid-font-size-utilities: (),
+  $spacing-utilities: (),
+  $fluid-spacing-utilities: ()
+) {
+  @layer utilities {
+    $spacing-properties: (
+      "mb": margin-block-end,
+      "mt": margin-block-start,
+      "ms": margin-inline-start,
+      "me": margin-inline-end,
+      "mx": margin-inline,
+      "my": margin-block,
+      "pb": padding-block-end,
+      "pt": padding-block-start,
+      "ps": padding-inline-start,
+      "pe": padding-inline-end,
+      "px": padding-inline,
+      "py": padding-block,
+    );
+
+    $breakpoints: (
+      'sm':  576px,
+      'md':  768px,
+      'lg':  992px,
+      'xl':  1200px,
+      'xxl': 1400px,
+    );
+
+    @each $size in $gap-utilities {
+      .g-#{$size} {
+        gap: rem($size) !important;
+      }
+    }
+
+    @each $size in $fixed-font-size-utilities {
+      .fs-#{$size} {
+        font-size: rem($size) !important;
+      }
+    }
+
+    @each $config in $fluid-font-size-utilities {
+      $values: map.get($config, values);
+      $breakpoints-config: map.get($config, breakpoints);
+
+      .fs-#{_fluid-class-name($values)} {
+        @if $breakpoints-config == null {
+          @include fluid-steps(font-size, _fluid-values($values), $important: true);
+        } @else {
+          @include fluid-steps(font-size, _fluid-values($values), $breakpoints-config, true);
+        }
+      }
+    }
+
+    @each $token, $sizes in $spacing-utilities {
+      $separator-index: string.index($token, "-");
+      $prefix: if($separator-index, string.slice($token, 1, $separator-index - 1), $token);
+      $bp: if($separator-index, string.slice($token, $separator-index + 1), null);
+      $property: map.get($spacing-properties, $prefix);
+
+      @if $property == null {
+        @error "Unknown spacing utility prefix '#{$prefix}'.";
+      }
+
+      @if $bp != null and map.get($breakpoints, $bp) == null {
+        @error "Unknown spacing utility breakpoint '#{$bp}'.";
+      }
+
+      @each $size in $sizes {
+        @if $bp == null {
+          .#{$token}-#{$size} {
+            #{$property}: rem($size) !important;
+          }
+        } @else {
+          @media (min-width: map.get($breakpoints, $bp)) {
+            .#{$token}-#{$size} {
+              #{$property}: rem($size) !important;
+            }
+          }
+        }
+      }
+    }
+
+    @each $config in $fluid-spacing-utilities {
+      $token: map.get($config, token);
+      $class: map.get($config, class);
+      $values: map.get($config, values);
+      $separator-index: string.index($token, "-");
+      $prefix: if($separator-index, string.slice($token, 1, $separator-index - 1), $token);
+      $bp: if($separator-index, string.slice($token, $separator-index + 1), null);
+      $property: map.get($spacing-properties, $prefix);
+
+      @if $property == null {
+        @error "Unknown fluid spacing utility prefix '#{$prefix}'.";
+      }
+
+      @if $bp != null and map.get($breakpoints, $bp) == null {
+        @error "Unknown fluid spacing utility breakpoint '#{$bp}'.";
+      }
+
+      @if $bp == null {
+        .#{$token}-#{$class} {
+          @include fluid-steps($property, _fluid-values($values), $important: true);
+        }
+      } @else {
+        @media (min-width: map.get($breakpoints, $bp)) {
+          .#{$token}-#{$class} {
+            @include fluid-steps($property, _fluid-values($values), $important: true);
+          }
+        }
+      }
+    }
+  }
+}

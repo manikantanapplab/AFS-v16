@@ -1,0 +1,58 @@
+include ../components/nav/_nav.pug
+
+nav.navbar.navbar-expand-lg.site-header(
+  x-data="navbar"
+  :class="{ 'is-scrolled': scrolled }"
+)
+  .container
+    //- Logo
+    a.navbar-brand.nav-logo(href="/")
+      img(src="assets/images/page-logo.svg" alt="Logo" height="36").d-none.d-logo-img
+      .logo-wordmark
+        | AFS
+        span .
+
+    //- Mobile toggler
+    button.navbar-toggler(
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#mainNav"
+      aria-controls="mainNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    )
+      span.navbar-toggler-icon
+
+    //- Nav
+    #mainNav.collapse.navbar-collapse
+      ul.navbar-nav.ms-auto.mb-2.mb-lg-0
+        li.nav-item
+          a.nav-link(href="/") Home
+        li.nav-item
+          a.nav-link(href="/about.html") About
+        li.nav-item
+          a.nav-link(href="#") Services
+        li.nav-item.dropdown
+          a.nav-link.dropdown-toggle(
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          ) Work
+          ul.dropdown-menu
+            li: a.dropdown-item(href="#") Case Studies
+            li: a.dropdown-item(href="#") Portfolio
+            li: hr.dropdown-divider
+            li: a.dropdown-item(href="#") Process
+        li.nav-item
+          a.nav-link(href="#") Contact
+
+      .nav-actions.d-flex.align-items-center.gap-2.ms-3
+        button.btn.btn-sm.btn-icon(
+          x-data="themeToggle"
+          @click="toggle"
+          :aria-label="dark ? 'Switch to light mode' : 'Switch to dark mode'"
+        )
+          i.bi(x-show="!dark" class="bi-moon")
+          i.bi(x-show="dark" class="bi-sun")
+        a.btn.btn-sm.btn-accent(href="#contact") Get in touch

@@ -1,0 +1,48 @@
+// ============================================================
+// TYPOGRAPHY TOKENS — AFS v16
+// Syne (geometric display) + DM Sans (clean body)
+// ============================================================
+
+:root {
+  // ── Font families ─────────────────────────────────────────
+  --font-display:   'Syne', system-ui, sans-serif;
+  --font-primary:   'DM Sans', system-ui, sans-serif;
+  --font-mono:      'DM Mono', 'Courier New', monospace;
+  // keep --font-secondary for any serif moments
+  --font-secondary: 'Georgia', serif;
+
+  // ── Font sizes ────────────────────────────────────────────
+  --text-xs:   clamp(0.6875rem, 0.66rem + 0.14vw, 0.75rem);    // 11→12px
+  --text-sm:   clamp(0.8125rem, 0.78rem + 0.16vw, 0.875rem);   // 13→14px
+  --text-base: clamp(0.9375rem, 0.90rem + 0.19vw, 1rem);       // 15→16px
+  --text-md:   clamp(1rem,      0.96rem + 0.20vw, 1.125rem);   // 16→18px
+  --text-lg:   clamp(1.125rem,  1.08rem + 0.23vw, 1.25rem);    // 18→20px
+  --text-xl:   clamp(1.25rem,   1.18rem + 0.35vw, 1.5rem);     // 20→24px
+  --text-2xl:  clamp(1.5rem,    1.38rem + 0.60vw, 2rem);       // 24→32px
+  --text-3xl:  clamp(1.875rem,  1.68rem + 0.98vw, 2.625rem);   // 30→42px
+  --text-4xl:  clamp(2.25rem,   1.96rem + 1.45vw, 3.25rem);    // 36→52px
+  --text-5xl:  clamp(3rem,      2.5rem  + 2.50vw, 5rem);       // 48→80px
+  --text-6xl:  clamp(3.75rem,   3rem    + 3.75vw, 6.75rem);    // 60→108px
+
+  // ── Line heights ──────────────────────────────────────────
+  --leading-tightest: 1.05;  // display / hero titles
+  --leading-tight:    1.2;   // headings
+  --leading-snug:     1.35;  // subheadings
+  --leading-normal:   1.6;   // body text
+  --leading-loose:    1.8;   // captions, labels
+
+  // ── Letter spacing ────────────────────────────────────────
+  --tracking-tight:  -0.025em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.05em;
+  --tracking-wider:   0.10em;
+  --tracking-widest:  0.18em;
+
+  // ── Font weights ──────────────────────────────────────────
+  --font-light:   300;
+  --font-regular: 400;
+  --font-medium:  500;
+  --font-semi:    600;
+  --font-bold:    700;
+  --font-black:   800;
+}

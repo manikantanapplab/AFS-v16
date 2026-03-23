@@ -1,0 +1,175 @@
+@use '../../sass/utilities/mixins' as *;
+
+// ============================================================
+// SWIPER — AFS v16
+// ============================================================
+// Import Swiper CSS from node_modules (add to base-only.scss
+// or app.scss depending on your CSS mode — see below).
+//
+// In app.scss or base-only.scss, add BEFORE @layer:
+//   @use '../../../node_modules/swiper/swiper';
+//   @use '../../../node_modules/swiper/modules/navigation';
+//   @use '../../../node_modules/swiper/modules/pagination';
+//   @use '../../../node_modules/swiper/modules/autoplay';
+//   @use '../../../node_modules/swiper/modules/effect-fade';
+//   @use '../../../node_modules/swiper/modules/effect-cards';
+//   @use '../../../node_modules/swiper/modules/thumbs';
+//
+// Or load from CDN in _base.pug <head>:
+//   link(rel="stylesheet"
+//        href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css")
+//
+// STRUCTURE
+// .swiper-wrap
+//   .swiper                  ← Swiper root (id="my-swiper")
+//     .swiper-wrapper        ← Swiper internal track
+//       .swiper-slide        ← one per slide
+//         .swiper-slide-img  ← background-image container
+//         .swiper-slide-content
+//           .swiper-tag
+//           .swiper-title
+//           .swiper-text
+//           .btn
+//   .swiper-btn-prev         ← custom prev button
+//   .swiper-btn-next         ← custom next button
+//   .swiper-pagination       ← dots (Swiper manages this)
+// ============================================================
+
+@layer components {
+
+  .swiper-wrap {
+    position: relative;
+
+    // ── Slide image ────────────────────────────────────────
+    // Default height — override per project
+    .swiper-slide-img {
+      width: 100%;
+      height: clamp(300px, 55vw, 720px);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    // ── Slide content overlay ──────────────────────────────
+    // Positioned over the image — style per project
+    .swiper-slide-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: var(--space-8) var(--space-8) var(--space-12);
+
+      // Uncomment + customize per project:
+      // background: linear-gradient(to top, rgb(0 0 0 / 70%), transparent);
+    }
+
+    .swiper-tag {
+      display: inline-block;
+      font-size: var(--text-sm);
+      font-weight: var(--font-semi);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-3);
+      // color: var(--color-secondary);
+    }
+
+    .swiper-title {
+      font-size: var(--text-4xl);
+      font-weight: var(--font-bold);
+      line-height: var(--leading-tight);
+      margin-bottom: var(--space-4);
+      // color: var(--color-white);
+    }
+
+    .swiper-text {
+      font-size: var(--text-lg);
+      max-width: 55ch;
+      margin-bottom: var(--space-6);
+      // color: rgb(255 255 255 / 85%);
+    }
+
+    // ── Custom arrow buttons ───────────────────────────────
+    // Swiper's default arrows are hidden — using custom ones
+    .swiper-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: none;
+      cursor: pointer;
+      padding: 0;
+
+      // ── Customize per project ──
+      // width: 48px;
+      // height: 48px;
+      // background: rgb(0 0 0 / 40%);
+      // border-radius: 50%;
+      // color: var(--color-white);
+      // font-size: 1.25rem;
+      // transition: background 200ms ease;
+      // &:hover { background: rgb(0 0 0 / 70%); }
+
+      &.swiper-button-disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+    }
+
+    .swiper-btn-prev { left: var(--space-4); }
+    .swiper-btn-next { right: var(--space-4); }
+
+    // ── Pagination dots ────────────────────────────────────
+    // Swiper CSS vars — easiest way to style dots
+    --swiper-pagination-color: var(--color-accent-dark);
+    --swiper-pagination-bullet-inactive-color: var(--color-border);
+    --swiper-pagination-bullet-inactive-opacity: 1;
+    --swiper-pagination-bullet-size: 10px;
+    --swiper-pagination-bullet-horizontal-gap: 4px;
+
+    .swiper-pagination {
+      position: static;        // pull dots below the slide
+      padding-block: var(--space-4);
+
+      // To overlay dots on the slide instead:
+      // position: absolute;
+      // bottom: var(--space-6);
+    }
+
+    // ── Thumbnail strip ────────────────────────────────────
+    .swiper-thumbs-strip {
+      margin-top: var(--space-3);
+
+      .swiper-slide { opacity: 0.5; transition: opacity 200ms ease; }
+      .swiper-slide-thumb-active { opacity: 1; }
+    }
+
+    .swiper-thumb-img {
+      aspect-ratio: 16 / 9;
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+    }
+
+    // ── Fade effect ────────────────────────────────────────
+    // When effect='fade', slides stack — content needs absolute
+    &:has(.swiper[data-effect="fade"]) {
+      .swiper-slide-content { position: absolute; }
+    }
+
+    // ── Cards effect ──────────────────────────────────────
+    &:has(.swiper[data-effect="cards"]) {
+      .swiper-slide-img { border-radius: 0.75rem; }
+    }
+
+    // ── Reduced motion ─────────────────────────────────────
+    @media (prefers-reduced-motion: reduce) {
+      --swiper-transition-timing-function: step-end;
+    }
+  }
+
+}

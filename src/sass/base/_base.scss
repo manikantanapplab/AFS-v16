@@ -1,0 +1,84 @@
+@use '../utilities/mixins' as *;
+
+@layer base {
+  body {
+    font-family: var(--font-primary);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    font-weight: var(--font-regular);
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-body);
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: var(--font-bold);
+    line-height: var(--leading-tight);
+    color: var(--color-text-primary);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  h1, .h1 { font-size: var(--text-5xl); line-height: var(--leading-tightest); }
+  h2, .h2 { font-size: var(--text-4xl); }
+  h3, .h3 { font-size: var(--text-3xl); }
+  h4, .h4 { font-size: var(--text-2xl); }
+  h5, .h5 { font-size: var(--text-xl); }
+  h6, .h6 { font-size: var(--text-lg); }
+
+  p {
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--color-text-secondary);
+    max-width: 65ch;
+  }
+
+  a {
+    color: var(--color-text-primary);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 200ms ease;
+    &:hover { color: var(--color-accent-dark); }
+  }
+
+  // Scroll-triggered reveal
+  @keyframes fade-in-up {
+    from { opacity: 0; translate: 0 1.5rem; }
+    to   { opacity: 1; translate: 0 0; }
+  }
+
+  .animate-on-scroll {
+    animation: fade-in-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+  }
+
+  // Utility: accent highlight text
+  .text-accent { color: var(--color-accent); }
+  .font-display { font-family: var(--font-display); }
+
+  // Divider with accent dot
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-block: 2rem;
+
+    &::before, &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      flex-shrink: 0;
+    }
+  }
+}

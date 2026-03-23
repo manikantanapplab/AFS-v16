@@ -1,0 +1,26 @@
+@use 'shared';
+
+@layer components {
+
+  // ── Contact form card ─────────────────────────────────────
+  .contact-form-card {
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    background: var(--color-bg-subtle);
+  }
+
+  // ── Contact detail rows ───────────────────────────────────
+  .contact-detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+
+    i { color: var(--color-primary); font-size: 1.25rem; margin-top: 2px; }
+
+    p { margin: 0; }
+    a { color: var(--color-text-secondary); text-decoration: none; }
+  }
+
+}

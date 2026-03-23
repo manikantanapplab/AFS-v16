@@ -1,0 +1,76 @@
+extends ../layouts/_base.pug
+
+block pagecss
+  link(rel="stylesheet" href="assets/css/pages/services.css")
+
+block componentcss
+
+block title
+  | Services | Company Name
+
+block content
+  include ../components/breadcrumb/_breadcrumb.pug
+  include ../components/hero/_hero.pug
+  include ../components/card/_card.pug
+  include ../components/section/_section.pug
+
+  //- ── BREADCRUMB ─────────────────────────────────────────────
+  +breadcrumb({ items: [{ label: 'Home', link: 'index.html' }, { label: 'Services' }] })
+
+  //- ── HERO ───────────────────────────────────────────────────
+  +hero({
+    eyebrow: 'What we do',
+    title: 'Our services.',
+    text: 'A short overview of what you offer. Focus on outcomes, not features.',
+    primaryBtn: { label: 'Talk to us', link: 'contact.html' }
+  })
+
+  //- ── SERVICES LIST ──────────────────────────────────────────
+  section.section
+    .container
+      -
+        var services = [
+          {
+            num: '01',
+            title: 'Service One',
+            tag: 'Category',
+            text: 'A clear, jargon-free explanation of this service. What is it? Who is it for? What does the client get at the end?',
+            deliverables: ['Deliverable one', 'Deliverable two', 'Deliverable three', 'Deliverable four']
+          },
+          {
+            num: '02',
+            title: 'Service Two',
+            tag: 'Category',
+            text: 'A clear, jargon-free explanation of this service. What is it? Who is it for? What does the client get at the end?',
+            deliverables: ['Deliverable one', 'Deliverable two', 'Deliverable three', 'Deliverable four']
+          },
+          {
+            num: '03',
+            title: 'Service Three',
+            tag: 'Category',
+            text: 'A clear, jargon-free explanation of this service. What is it? Who is it for? What does the client get at the end?',
+            deliverables: ['Deliverable one', 'Deliverable two', 'Deliverable three', 'Deliverable four']
+          }
+        ]
+      each s, i in services
+        .row.g-5.align-items-start.py-5(class=i > 0 ? 'border-top' : '')
+          .col-lg-4
+            span.section-tag #{s.tag}
+            h2.section-title.mt-2
+              span.fs-48.fw-bold.d-block(style='color:var(--color-border)') #{s.num}
+              | #{s.title}
+          .col-lg-8
+            p.section-text #{s.text}
+            ul.list-unstyled.row.g-2.mt-3
+              each d in s.deliverables
+                li.col-sm-6
+                  span.d-flex.align-items-center.gap-2
+                    i.bi.bi-check-circle-fill(style='color:var(--color-primary)')
+                    | #{d}
+
+  //- ── CTA ────────────────────────────────────────────────────
+  section.section.section-muted
+    .container.text-center
+      h2.section-title Not sure which service fits?
+      p.section-text.mb-4 Tell us what you are dealing with and we will recommend the right approach.
+      a.btn.btn-primary.btn-lg(href='contact.html') Start a conversation

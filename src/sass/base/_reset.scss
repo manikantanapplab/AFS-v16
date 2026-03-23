@@ -1,0 +1,49 @@
+@layer reset {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    hanging-punctuation: first last;
+  }
+
+  // body {
+  //   font-family: var(--font-primary);
+  //   font-size: var(--text-base);
+  //   // font-size: 16px;
+  //   line-height: var(--leading-normal);
+  //   color: var(--color-text-primary);
+  //   background-color: var(--color-bg-body);
+  //   min-height: 100dvh;
+  //   background: var(--color-bg-body) url('../images/bg-1.png') no-repeat 0 0;
+  //   object-fit: cover;
+  // }
+
+  img, video, svg {
+    max-width: 100%;
+    display: block;
+  }
+
+  input, button, textarea, select {
+    font: inherit;
+  }
+
+  p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+  }
+
+  body:has(dialog[open]) {
+    overflow: hidden;
+  }
+}
+ul, ol {
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+}
+li {
+  list-style: none;
+}

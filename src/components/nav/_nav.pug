@@ -1,0 +1,25 @@
+//- ============================================================
+//- NAV COMPONENT — Pug Mixins
+//- ============================================================
+
+//- Basic nav links
+mixin navLinks(items, className)
+  ul.mb-0(class=className || 'nav-links')
+    each item in items
+      li.nav-item(class=item.active ? 'is-active' : '')
+        a.nav-link(href=item.href)
+          if item.icon
+            i(style=`-webkit-mask-image: url(${item.icon})`)
+
+          = item.label
+
+//- Dropdown nav item
+mixin navDropdown(label, items)
+  li.nav-item.has-dropdown(x-data="{ open: false }")
+    button.nav-link.nav-dropdown-trigger(@click="open = !open" :aria-expanded="open")
+      span= label
+      i.bi.bi-chevron-down(:class="{ 'rotated': open }")
+    ul.nav-dropdown(x-show="open" @click.outside="open = false")
+      each item in items
+        li
+          a(href=item.href)= item.label

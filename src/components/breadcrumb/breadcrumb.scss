@@ -1,0 +1,50 @@
+@use '../../sass/utilities/mixins' as *;
+
+@layer components {
+  .breadcrumb-wrapper {
+    padding-block: var(--space-4);
+
+    .breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.25rem;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+      font-size: var(--text-xs);
+      font-weight: var(--font-medium);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+
+      a {
+        color: var(--color-text-muted);
+        text-decoration: none;
+        transition: color 150ms ease;
+        &:hover { color: var(--color-text-primary); }
+      }
+
+      span {
+        color: var(--color-text-secondary);
+      }
+
+      // Separator
+      &:not(:last-child)::after {
+        content: '/';
+        margin-inline: 0.5rem;
+        color: var(--color-text-muted);
+        font-weight: var(--font-regular);
+      }
+
+      &.is-active span {
+        color: var(--color-text-primary);
+        font-weight: var(--font-semi);
+      }
+    }
+  }
+}

@@ -1,0 +1,97 @@
+@use '../../sass/utilities/mixins' as *;
+
+@layer components {
+  .testimonial {
+    padding-block: var(--section-padding-y);
+    background: var(--color-bg-dark);
+    overflow: hidden;
+    position: relative;
+
+    // Accent blob behind quote mark
+    &::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: -60px;
+      width: 300px;
+      height: 300px;
+      background: var(--color-accent);
+      opacity: 0.06;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .testimonial-inner {
+      position: relative;
+      max-width: 800px;
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .testimonial-mark {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 12vw, 10rem);
+      font-weight: var(--font-black);
+      color: var(--color-accent);
+      line-height: 0.8;
+      display: block;
+      margin-bottom: 1rem;
+      letter-spacing: -0.05em;
+    }
+
+    .testimonial-quote {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: var(--font-bold);
+      line-height: var(--leading-snug);
+      letter-spacing: var(--tracking-tight);
+      color: #F5F4F2;
+      margin-bottom: var(--space-6);
+      border: none;
+      padding: 0;
+    }
+
+    .testimonial-body {
+      font-size: var(--text-lg);
+      line-height: var(--leading-loose);
+      color: var(--color-gray-400);
+      max-width: 58ch;
+      margin-inline: auto;
+      margin-bottom: var(--space-8);
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-4);
+    }
+
+    .testimonial-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--color-accent);
+    }
+
+    .testimonial-meta {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .testimonial-name {
+      font-weight: var(--font-semi);
+      color: #F5F4F2;
+      font-size: var(--text-sm);
+    }
+
+    .testimonial-role,
+    .testimonial-company {
+      font-size: var(--text-xs);
+      color: var(--color-gray-500);
+    }
+  }
+}

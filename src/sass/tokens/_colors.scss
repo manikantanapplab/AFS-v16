@@ -1,0 +1,63 @@
+// ============================================================
+// COLOR TOKENS — AFS v16
+// ============================================================
+
+:root {
+  // Brand
+  --color-primary:        #0A0A0A;
+  --color-primary-dark:   #000000;
+  --color-accent:         #E8FF47;        // electric lime — the signature punch
+  --color-accent-dark:    #C8E030;
+  --color-accent-muted:   #E8FF4720;
+
+  // Neutrals
+  --color-white: #FFFFFF;
+  --color-black: #0A0A0A;
+
+  // Semantic
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-error:   #DC2626;
+  --color-info:    #0284C7;
+
+  // Gray scale — warm undertone
+  --color-gray-50:  #FAFAF9;
+  --color-gray-100: #F5F4F2;
+  --color-gray-200: #ECEAE7;
+  --color-gray-300: #D9D6D1;
+  --color-gray-400: #B8B4AE;
+  --color-gray-500: #918D87;
+  --color-gray-600: #6B6760;
+  --color-gray-700: #4A4742;
+  --color-gray-800: #2E2C29;
+  --color-gray-900: #1A1917;
+
+  // Text
+  --color-text-primary:   var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-muted:     var(--color-gray-400);
+
+  // Backgrounds
+  --color-bg-body:   var(--color-white);
+  --color-bg-subtle: var(--color-gray-50);
+  --color-bg-muted:  var(--color-gray-100);
+  --color-bg-dark:   var(--color-gray-900);
+
+  // Borders
+  --color-border:      var(--color-gray-200);
+  --color-border-soft: #D9D6D120;
+  --color-border-strong: var(--color-gray-300);
+}
+
+// Dark mode
+[data-theme="dark"] {
+  --color-bg-body:        var(--color-gray-900);
+  --color-bg-subtle:      var(--color-gray-800);
+  --color-bg-muted:       var(--color-gray-700);
+  --color-text-primary:   #F5F4F2;
+  --color-text-secondary: var(--color-gray-400);
+  --color-text-muted:     var(--color-gray-500);
+  --color-border:         var(--color-gray-700);
+  --color-border-soft:    #4A474220;
+  --color-border-strong:  var(--color-gray-600);
+}
