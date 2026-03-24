@@ -4,11 +4,12 @@
 @use '../utilities/generated' as generated;
 
 @include generated.emit-generated-utilities(
-  (4, 5),
-  (),
+  (3, 5),
+  (20),
   (),
   (
-  "mt": (3, 4),
+  "mb": (0, 4),
+  "mt": (2, 3, 4),
 ),
   ()
 );

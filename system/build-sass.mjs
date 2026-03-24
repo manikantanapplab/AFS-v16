@@ -5,15 +5,18 @@
 // No manual lists needed — just add files and restart
 // ============================================================
 
-import { promises as fs } from 'fs';
-import { execSync, spawn } from 'child_process';
+import { promises as fs, watch } from 'fs';
+import { execSync } from 'child_process';
 import path from 'path';
 
 const SRC_DIR = 'src';
 const COMPONENT_ENTRY_SUFFIX = '.utilities.generated.scss';
 const PAGE_UTILITY_SUFFIX = '.utilities.generated.scss';
 const PAGE_ENTRY_SUFFIX = '.entry.generated.scss';
+const WATCHED_SOURCE_FILE_PATTERN = /\.(scss|pug|html|js|ts|jsx|tsx)$/i;
 const UTILITY_SOURCE_FILE_PATTERN = /\.(pug|html|js|ts|jsx|tsx)$/i;
+const AUTO_GENERATED_SOURCE_PATTERN = /(^|[\\/])(app\.scss|[^\\/]+\.generated\.scss)$/i;
+const POLL_INTERVAL_MS = 1000;
 const GAP_PATTERN = /\bg-(\d{1,3})\b/g;
 const FIXED_FONT_SIZE_PATTERN = /\bfs-([1-9]\d{1,2})\b/g;
 const FLUID_FONT_SIZE_PATTERN = /\bfs-(\d+(?:f\d+){1,3})\b/g;
@@ -136,6 +139,67 @@ async function getSourceFiles(dir) {
   }
 
   return files;
+}
+
+async function listWatchedSourceFiles(dir, base = dir) {
+  const entries = await fs.readdir(dir, { withFileTypes: true }).catch(() => []);
+  const files = [];
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...await listWatchedSourceFiles(fullPath, base));
+      continue;
+    }
+
+    const relativePath = path.relative(base, fullPath);
+    if (!WATCHED_SOURCE_FILE_PATTERN.test(entry.name)) continue;
+    if (AUTO_GENERATED_SOURCE_PATTERN.test(relativePath)) continue;
+    files.push(relativePath);
+  }
+
+  return files;
+}
+
+async function buildWatchedSourceSnapshot() {
+  const snapshot = new Map();
+  const files = await listWatchedSourceFiles(SRC_DIR);
+
+  for (const relativePath of files) {
+    const fullPath = path.join(SRC_DIR, relativePath);
+    const stat = await fs.stat(fullPath).catch(() => null);
+    if (!stat?.isFile()) continue;
+    snapshot.set(relativePath, `${stat.mtimeMs}:${stat.size}`);
+  }
+
+  return snapshot;
+}
+
+async function watchedSourcesChanged(snapshot) {
+  const files = await listWatchedSourceFiles(SRC_DIR);
+  const seen = new Set();
+
+  for (const relativePath of files) {
+    seen.add(relativePath);
+    const fullPath = path.join(SRC_DIR, relativePath);
+    const stat = await fs.stat(fullPath).catch(() => null);
+    if (!stat?.isFile()) continue;
+
+    const signature = `${stat.mtimeMs}:${stat.size}`;
+    if (snapshot.get(relativePath) !== signature) {
+      snapshot.set(relativePath, signature);
+      return true;
+    }
+  }
+
+  for (const relativePath of [...snapshot.keys()]) {
+    if (seen.has(relativePath)) continue;
+    snapshot.delete(relativePath);
+    return true;
+  }
+
+  return false;
 }
 
 async function collectGeneratedUtilitiesForFiles(files) {
@@ -389,8 +453,8 @@ ${layers.length ? layers.map(l => `@use 'layers/${l}';`).join('\n') : '// none y
   console.log(`✅ app.scss — ${components.length} components, ${layers.length} page layers`);
 }
 
-const components = await getValidComponents();
-const pages = await getPages();
+let components = await getValidComponents();
+let pages = await getPages();
 
 await writeGeneratedComponentEntries(components);
 await writeGeneratedPageEntries(pages, components);
@@ -403,28 +467,6 @@ const isWatch      = process.argv.includes('--watch');
 const isCompressed = process.argv.includes('--compressed');
 const noSourceMap  = process.argv.includes('--no-source-map');
 
-// ── Build targets ─────────────────────────────────────────────
-const targets = [
-  'src/sass/app.scss:dist/assets/css/app.css',
-  'src/sass/base/base-only.scss:dist/assets/css/base.css',
-];
-
-const pageScssEntries = await fs.readdir('src/sass/pages').catch(() => []);
-for (const f of pageScssEntries) {
-  if (
-    f.startsWith('_') ||
-    !f.endsWith('.scss') ||
-    f.endsWith(PAGE_UTILITY_SUFFIX) ||
-    f.endsWith(PAGE_ENTRY_SUFFIX)
-  ) continue;
-  const page = path.basename(f, '.scss');
-  targets.push(`${getPageEntryPath(page)}:dist/assets/css/pages/${page}.css`);
-}
-
-for (const c of components) {
-  targets.push(`${getComponentEntryPath(c)}:dist/assets/css/components/${c}.css`);
-}
-
 await fs.mkdir('dist/assets/css/pages',      { recursive: true });
 await fs.mkdir('dist/assets/css/components', { recursive: true });
 
@@ -434,33 +476,129 @@ await fs.mkdir('dist/assets/css/components', { recursive: true });
 // Prod  (--no-source-map): sourcemaps OFF (use for final client delivery)
 const sourceMapFlag = noSourceMap ? '--no-source-map' : '--source-map';
 
-const sassArgs = [
-  isWatch      ? '--watch'            : '',
-  isCompressed ? '--style=compressed' : '',
-  sourceMapFlag,
-  DEPRECATION_FLAGS,
-  ...targets,
-].filter(Boolean);
+async function getBuildTargets(currentComponents) {
+  const targets = [
+    'src/sass/app.scss:dist/assets/css/app.css',
+    'src/sass/base/base-only.scss:dist/assets/css/base.css',
+  ];
+
+  const pageScssEntries = await fs.readdir('src/sass/pages').catch(() => []);
+  for (const f of pageScssEntries) {
+    if (
+      f.startsWith('_') ||
+      !f.endsWith('.scss') ||
+      f.endsWith(PAGE_UTILITY_SUFFIX) ||
+      f.endsWith(PAGE_ENTRY_SUFFIX)
+    ) continue;
+    const page = path.basename(f, '.scss');
+    targets.push(`${getPageEntryPath(page)}:dist/assets/css/pages/${page}.css`);
+  }
+
+  for (const c of currentComponents) {
+    targets.push(`${getComponentEntryPath(c)}:dist/assets/css/components/${c}.css`);
+  }
+
+  return targets;
+}
+
+async function compileCss(currentComponents) {
+  const targets = await getBuildTargets(currentComponents);
+  const sassArgs = [
+    isCompressed ? '--style=compressed' : '',
+    sourceMapFlag,
+    DEPRECATION_FLAGS,
+    ...targets,
+  ].filter(Boolean);
+
+  execSync(`sass ${sassArgs.join(' ')}`, { stdio: 'inherit' });
+  console.log(`✅ CSS compiled (${targets.length} targets)`);
+}
 
 if (isWatch) {
   console.log(`🗺  Sourcemaps: ON  (dev mode)`);
-  const child = spawn('sass', sassArgs, { stdio: 'inherit', shell: true });
-  child.on('error', err => { console.error(err.message); process.exit(1); });
+  await compileCss(components);
 
   let refreshTimer;
-  fs.watch(SRC_DIR, { recursive: true }, (eventType, filename) => {
-    if (!filename || !UTILITY_SOURCE_FILE_PATTERN.test(filename)) return;
-    if (filename.includes('_utilities.generated.scss')) return;
+  let isPolling = false;
+  let isBuilding = false;
+  let queuedBuild = false;
 
-    clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(async () => {
+  const buildAll = async () => {
+    if (isBuilding) {
+      queuedBuild = true;
+      return;
+    }
+
+    isBuilding = true;
+
+    try {
+      components = await getValidComponents();
+      pages = await getPages();
       await writeGeneratedComponentEntries(components);
       await writeGeneratedPageEntries(pages, components);
+      await writeAppScss();
       console.log(`↻ component and page utility entries regenerated`);
+      await compileCss(components);
+    } finally {
+      isBuilding = false;
+
+      if (queuedBuild) {
+        queuedBuild = false;
+        await buildAll();
+      }
+    }
+  };
+
+  const scheduleBuild = () => {
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(() => {
+      buildAll().catch((error) => {
+        console.error(`❌ Failed to rebuild Sass: ${error.message}`);
+      });
     }, 80);
-  });
+  };
+
+  const startPolling = async (reason) => {
+    if (isPolling) return;
+    isPolling = true;
+
+    const snapshot = await buildWatchedSourceSnapshot();
+    const suffix = reason ? ` (${reason})` : '';
+    console.warn(`⚠️ Native Sass source watching unavailable${suffix}; polling every ${POLL_INTERVAL_MS}ms instead.`);
+
+    setInterval(async () => {
+      try {
+        if (await watchedSourcesChanged(snapshot)) {
+          scheduleBuild();
+        }
+      } catch (error) {
+        console.error(`❌ Sass source polling failed: ${error.message}`);
+      }
+    }, POLL_INTERVAL_MS);
+
+    console.log(`👀 Polling ${SRC_DIR}/ for Sass source changes...`);
+  };
+
+  try {
+    const watcher = watch(SRC_DIR, { recursive: true }, (_eventType, filename) => {
+      if (!filename || !WATCHED_SOURCE_FILE_PATTERN.test(filename)) return;
+      if (AUTO_GENERATED_SOURCE_PATTERN.test(filename)) return;
+      scheduleBuild();
+    });
+
+    watcher.on('error', (error) => {
+      watcher.close();
+      startPolling(error.code || error.message).catch((pollError) => {
+        console.error(`❌ Failed to start Sass polling: ${pollError.message}`);
+        process.exit(1);
+      });
+    });
+
+    console.log(`👀 Watching ${SRC_DIR}/ for Sass source changes...`);
+  } catch (error) {
+    await startPolling(error.code || error.message);
+  }
 } else {
   console.log(`🗺  Sourcemaps: ${noSourceMap ? 'OFF' : 'ON'}`);
-  execSync(`sass ${sassArgs.join(' ')}`, { stdio: 'inherit' });
-  console.log(`✅ CSS compiled (${targets.length} targets)`);
+  await compileCss(components);
 }

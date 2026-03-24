@@ -1,0 +1,9 @@
+//- TestComponent2 component — usage: +test-component-2({ title: '', text: '' })
+mixin test-component-2(data)
+  section.test-component-2
+    .container
+      if data.title
+        h2.test-component-2-title.fs-16f24f100= data.title
+      if data.text
+        p.test-component-2-text= data.text
+      block

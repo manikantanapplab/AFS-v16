@@ -4,12 +4,21 @@ block pagecss
   link(rel="stylesheet" href="assets/css/pages/index.css")
 
 block componentcss
+  link(rel="stylesheet" href="assets/css/components/button.css")
+  link(rel="stylesheet" href="assets/css/components/card.css")
+  link(rel="stylesheet" href="assets/css/components/hero.css")
+  link(rel="stylesheet" href="assets/css/components/section.css")
+  link(rel="stylesheet" href="assets/css/components/test-component-2.css")
+  link(rel="stylesheet" href="assets/css/components/test-component-3.css")
+  link(rel="stylesheet" href="assets/css/components/testimonial.css")
 
 block title
   | Home | Company Name
 
 block content
   include ../components/hero/_hero.pug
+  include ../components/test-component-3/_test-component-3.pug
+  include ../components/test-component-2/_test-component-2.pug
   include ../components/card/_card.pug
   include ../components/testimonial/_testimonial.pug
   include ../components/section/_section.pug
@@ -22,6 +31,10 @@ block content
     primaryBtn: { label: 'Get started', link: '#contact' },
     secondaryBtn: { label: 'Learn more', link: 'about.html' }
   })
+
+  +test-component-3({ title: 'Test Component 3', text: 'This is a simple test component for demonstration purposes.' })
+
+  +test-component-2({ title: 'Test Component 2', text: 'This is a simple test component for demonstration purposes.' })
 
   //- ── STATS ──────────────────────────────────────────────────
   section.section.section-muted
