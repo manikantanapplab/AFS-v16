@@ -12,7 +12,7 @@
 @use '../layouts/header';
 @use 'base/footer';
 
-// Components (13 found)
+// Components (11 found)
 @use '../components/apicard/apicard.utilities.generated';
 @use '../components/app-head/app-head.utilities.generated';
 @use '../components/breadcrumb/breadcrumb.utilities.generated';
@@ -23,8 +23,6 @@
 @use '../components/page-aside/page-aside.utilities.generated';
 @use '../components/section/section.utilities.generated';
 @use '../components/swiper/swiper.utilities.generated';
-@use '../components/test-component-2/test-component-2.utilities.generated';
-@use '../components/test-component-3/test-component-3.utilities.generated';
 @use '../components/testimonial/testimonial.utilities.generated';
 
 // Page utilities (4 found)
