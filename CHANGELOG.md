@@ -4,7 +4,92 @@ All notable changes to the Agency Frontend System are documented here.
 Format: `## [version] — YYYY-MM-DD` → what changed → migration notes if needed.
 
 When you update the template, check this file to see if any changes need to be
-manually applied to existing projects (marked ⚠️).
+manually applied to existing projects (marked ).
+
+---
+
+## [16.2.0] — 2026-03-28
+
+### Critical CSS — Smart extraction (all modes)
+
+Rewrote `critical.mjs` with a smarter above-fold extraction approach.
+Replaces the previous pattern-matching implementation which over-inlined
+unneeded CSS and caused duplicate downloads.
+
+### What changed
+
+| File | Action |
+|---|---|
+| `critical.mjs` |  Replace in project root |
+
+### What's new
+
+- Extracts only what is guaranteed above the fold: `:root` tokens, `body`, `html`, `.site-header`, `.navbar`
+- Full CSS loads async via `media="print"` flip — zero render blocking
+- No duplicate downloads — each rule is loaded exactly once
+- Correct `<noscript>` fallback
+- Works correctly across all three CSS modes:
+  - `single` → extracts from `app.css`
+  - `per-page` → extracts from each `pages/*.css`
+  - `per-component` → extracts from `base.css` only (component files already async)
+- No new dependencies — zero `npm install` needed
+
+### Migration
+
+ Replace `critical.mjs` in your project root with the new version.
+No other files need to change. `afs.config.mjs` and `system/run-critical.mjs` stay the same.
+
+---
+
+## [16.1.0] — 2026-03-28
+
+### Showcase — Real Pug compilation with sample data
+
+Rewrote `system/build-showcase.mjs` to compile actual Pug mixins with
+real sample data instead of relying on static `.preview.html` files
+that were out of sync with the real component output.
+
+### What changed
+
+| File | Action |
+|---|---|
+| `system/build-showcase.mjs` |  Replace in `system/` |
+| `src/components/apicard/apicard.data.preview.js` | Add to component folder |
+| `src/components/hero/hero.data.preview.js` | Add to component folder |
+| `src/components/card/card.data.preview.js` | Add to component folder |
+| `src/components/testimonial/testimonial.data.preview.js` | Add to component folder |
+| `src/components/breadcrumb/breadcrumb.data.preview.js` | Add to component folder |
+| `src/components/carousel/carousel.data.preview.js` | Add to component folder |
+| `src/components/app-head/app-head.data.preview.js` | Add to component folder |
+
+### What's new
+
+- `build-showcase.mjs` now deep-scans each component's Pug mixin and compiles it with real sample data
+- New `*.data.preview.js` pattern — one file per component with sample data
+- Sidebar status indicators: 🟢 Pug compiled / 🟡 fallback HTML / ⬜ no data yet
+- Active nav highlight on scroll in showcase page
+- Light / dark toggle in showcase
+- Any new component auto-renders in showcase when a `data.preview.js` is added — no other changes needed
+
+### Migration
+
+ Replace `system/build-showcase.mjs` with the new version.
+
+For each component you want a real preview, add a `<name>.data.preview.js`
+file inside `src/components/<name>/` and export a default object with sample data:
+
+```js
+// src/components/hero/hero.data.preview.js
+export default {
+  eyebrow: 'Agency Frontend System',
+  title: 'Build Faster. Deliver Cleaner.',
+  text: 'Supporting description text here.',
+  primaryBtn: { label: 'Get Started', link: '#' }
+};
+```
+
+Without a `data.preview.js`, the showcase falls back to `.preview.html`.
+Without either, it shows a placeholder with instructions.
 
 ---
 
@@ -87,7 +172,7 @@ Initial public release of AFS v16.
 
 When a new AFS version is released, existing projects are **not automatically updated** —
 each project repo is independent. Check the changelog entry for the new version and look
-for items marked ⚠️ — those need manual attention.
+for items marked  — those need manual attention.
 
 For non-breaking additions (new components, new docs), you can manually copy the relevant
 files from the new template into your project if you want them.
