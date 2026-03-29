@@ -29,9 +29,12 @@ mixin apiCard(data)
       button.api-card-bookmark(
         type='button'
         aria-label='Bookmark'
-        class=data.bookmarked ? 'is-bookmarked' : ''
+        x-data=`{ bookmarked: ${data.bookmarked ? 'true' : 'false'} }`
+        @click='bookmarked = !bookmarked'
+        :class="{ 'is-bookmarked': bookmarked }"
+        :aria-pressed='bookmarked'
       )
-        i.bi.bi-bookmark(aria-hidden='true')
+        i.bi(:class="bookmarked ? 'bi-bookmark-fill' : 'bi-bookmark'" aria-hidden='true')
 
     //- ── Title ───────────────────────────────
     .api-card-title-row

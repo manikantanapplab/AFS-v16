@@ -29,22 +29,25 @@
         &:hover { color: var(--color-text-primary); }
       }
 
-      span {
-        color: var(--color-text-secondary);
-      }
+      span { color: var(--color-text-secondary); }
 
-      // Separator
       &:not(:last-child)::after {
         content: '/';
         margin-inline: 0.5rem;
         color: var(--color-text-muted);
         font-weight: var(--font-regular);
       }
-
-      &.is-active span {
-        color: var(--color-text-primary);
-        font-weight: var(--font-semi);
-      }
     }
   }
+
+  // ── Dynamic states — outside nesting so purgecss comments compile correctly
+  /* purgecss start ignore */
+
+  // .is-active — set by Pug mixin and can also be toggled by JS
+  .breadcrumb-item.is-active span {
+    color: var(--color-text-primary);
+    font-weight: var(--font-semi);
+  }
+
+  /* purgecss end ignore */
 }

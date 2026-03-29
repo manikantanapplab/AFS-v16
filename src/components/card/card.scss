@@ -16,7 +16,8 @@
       border-color: var(--color-border-strong);
     }
 
-    // Top accent bar — shown on featured cards
+    /* purgecss start ignore */
+    // Variant classes passed as data props — protect in case toggled by JS
     &.card-featured {
       border-top: 3px solid var(--color-accent);
       background: var(--color-bg-subtle);
@@ -98,6 +99,8 @@
       border-top: 1px solid var(--color-border);
       margin-top: auto;
     }
+
+    /* purgecss end ignore */
 
     // Icon card variant (no image, shows icon top)
     &.card-icon {

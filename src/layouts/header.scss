@@ -8,20 +8,12 @@
     transition: border-color 300ms ease, box-shadow 300ms ease, background-color 300ms ease;
     padding-block: 0.125rem;
 
-    &.is-scrolled {
-      border-bottom-color: var(--color-border);
-      box-shadow: 0 2px 20px oklch(0% 0 0 / 0.06);
-      backdrop-filter: blur(8px);
-      background-color: oklch(from var(--color-bg-body) l c h / 0.92);
-    }
-
     .nav-logo {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       text-decoration: none;
 
-      // Text logo fallback
       .logo-wordmark {
         font-family: var(--font-display);
         font-size: 1.125rem;
@@ -30,9 +22,7 @@
         letter-spacing: -0.03em;
         line-height: 1;
 
-        span {
-          color: var(--color-accent-dark);
-        }
+        span { color: var(--color-accent-dark); }
       }
     }
 
@@ -61,8 +51,6 @@
 
       &:hover { color: var(--color-text-primary); }
       &:hover::after { transform: scaleX(1); }
-      &.active { color: var(--color-text-primary); }
-      &.active::after { transform: scaleX(1); }
     }
 
     .dropdown-menu {
@@ -112,4 +100,29 @@
       background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23918D87' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
     }
   }
+
+  // ── Dynamic states — outside nesting so purgecss comments compile correctly
+  /* purgecss start ignore */
+
+  // .is-scrolled — added by Alpine navbar component on scroll
+  .site-header.is-scrolled {
+    border-bottom-color: var(--color-border);
+    box-shadow: 0 2px 20px oklch(0% 0 0 / 0.06);
+    backdrop-filter: blur(8px);
+    background-color: oklch(from var(--color-bg-body) l c h / 0.92);
+  }
+
+  // .active — added by Bootstrap JS on active nav link
+  .site-header .navbar-nav .nav-link.active {
+    color: var(--color-text-primary);
+
+    &::after { transform: scaleX(1); }
+  }
+
+  // Bootstrap JS dropdown/collapse states
+  .site-header .navbar-collapse.show      { display: flex !important; }
+  .site-header .navbar-collapse.collapsing { height: 0; overflow: hidden; transition: height 350ms ease; }
+  .site-header .dropdown-menu.show        { display: block; }
+
+  /* purgecss end ignore */
 }

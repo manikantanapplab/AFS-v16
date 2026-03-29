@@ -1,61 +1,23 @@
 @use '../../sass/utilities/mixins' as *;
 
-// ============================================================
-// CAROUSEL — AFS v16
-// ============================================================
-// Unstyled by default — layout only.
-// All visual design (colors, typography, arrow style, dot style)
-// is intentionally left for you to customize per project.
-//
-// STRUCTURE
-// .carousel
-//   .carousel-track-wrap
-//     .carousel-track          ← transforms on slide change
-//       .carousel-slide        ← one per slide
-//         .carousel-slide-img  ← background-image container
-//         .carousel-slide-content
-//           .carousel-tag
-//           .carousel-title
-//           .carousel-text
-//           .btn               ← Bootstrap button
-//   .carousel-arrow-prev       ← left arrow button
-//   .carousel-arrow-next       ← right arrow button
-//   .carousel-dots             ← dot nav container
-//     .carousel-dot            ← individual dot
-//     .carousel-dot.is-active  ← active dot state
-// ============================================================
-
 @layer components {
-
-  // ── Container ────────────────────────────────────────────
   .carousel {
     position: relative;
-    overflow: hidden;   // clips slides outside viewport
+    overflow: hidden;
 
-    // ── Track ──────────────────────────────────────────────
-    .carousel-track-wrap {
-      overflow: hidden;
-    }
+    .carousel-track-wrap { overflow: hidden; }
 
     .carousel-track {
       display: flex;
       transition: transform 500ms ease;
       will-change: transform;
-
-      // Pause transition during resize to avoid flicker
-      &.is-resizing {
-        transition: none;
-      }
     }
 
-    // ── Slide ───────────────────────────────────────────────
     .carousel-slide {
-      min-width: 100%;   // each slide = full width
+      min-width: 100%;
       position: relative;
     }
 
-    // ── Slide image ─────────────────────────────────────────
-    // Default height — override per project
     .carousel-slide-img {
       width: 100%;
       height: clamp(300px, 55vw, 720px);
@@ -64,8 +26,6 @@
       background-repeat: no-repeat;
     }
 
-    // ── Slide content overlay ────────────────────────────────
-    // Positioned over the image — style per project
     .carousel-slide-content {
       position: absolute;
       inset: 0;
@@ -73,10 +33,6 @@
       flex-direction: column;
       justify-content: flex-end;
       padding: var(--space-8) var(--space-8) var(--space-12);
-
-      // ── Customize these per project ──
-      // background: linear-gradient(to top, rgb(0 0 0 / 70%), transparent);
-      // color: var(--color-white);
     }
 
     .carousel-tag {
@@ -86,8 +42,6 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-bottom: var(--space-3);
-
-      // color: var(--color-secondary);
     }
 
     .carousel-title {
@@ -95,19 +49,14 @@
       font-weight: var(--font-bold);
       line-height: var(--leading-tight);
       margin-bottom: var(--space-4);
-
-      // color: var(--color-white);
     }
 
     .carousel-text {
       font-size: var(--text-lg);
       max-width: 55ch;
       margin-bottom: var(--space-6);
-
-      // color: rgb(255 255 255 / 85%);
     }
 
-    // ── Arrows ──────────────────────────────────────────────
     .carousel-arrow {
       position: absolute;
       top: 50%;
@@ -121,16 +70,6 @@
       background: none;
       padding: 0;
 
-      // ── Customize per project ──
-      // width: 48px;
-      // height: 48px;
-      // background: rgb(0 0 0 / 40%);
-      // border-radius: 50%;
-      // color: var(--color-white);
-      // font-size: 1.25rem;
-      // transition: background 200ms ease;
-      // &:hover { background: rgb(0 0 0 / 70%); }
-
       &:disabled {
         opacity: 0.3;
         cursor: not-allowed;
@@ -140,18 +79,11 @@
     .carousel-arrow-prev { left: var(--space-4); }
     .carousel-arrow-next { right: var(--space-4); }
 
-    // ── Dots ────────────────────────────────────────────────
     .carousel-dots {
       display: flex;
       justify-content: center;
       gap: var(--space-2);
       padding: var(--space-4) 0;
-
-      // To position dots over the slide:
-      // position: absolute;
-      // bottom: var(--space-6);
-      // left: 0;
-      // right: 0;
     }
 
     .carousel-dot {
@@ -159,24 +91,27 @@
       cursor: pointer;
       padding: 0;
       background: none;
-
-      // ── Customize per project ──
-      // width: 10px;
-      // height: 10px;
-      // border-radius: 50%;
-      // background: var(--color-border);
-      // transition: background 200ms ease, transform 200ms ease;
-
-      &.is-active {
-        // background: var(--color-primary);
-        // transform: scale(1.3);
-      }
     }
 
-    // ── Reduced motion ──────────────────────────────────────
     @media (prefers-reduced-motion: reduce) {
       .carousel-track { transition: none; }
     }
   }
 
+  // ── Dynamic states — outside nesting so purgecss comments compile correctly
+  /* purgecss start ignore */
+
+  // .is-resizing — added by JS during window resize to prevent flicker
+  .carousel .carousel-track.is-resizing {
+    transition: none;
+  }
+
+  // .is-active — toggled by Alpine.js carousel component on active dot
+  .carousel .carousel-dot.is-active {
+    // customize per project:
+    // background: var(--color-primary);
+    // transform: scale(1.3);
+  }
+
+  /* purgecss end ignore */
 }

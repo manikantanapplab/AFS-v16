@@ -1,6 +1,6 @@
 include ../components/nav/_nav.pug
 
-nav.navbar.navbar-expand-lg.site-header(
+nav.navbar.navbar-expand-lg.site-header.critical-section(
   x-data="navbar"
   :class="{ 'is-scrolled': scrolled }"
 )
@@ -27,7 +27,7 @@ nav.navbar.navbar-expand-lg.site-header(
     #mainNav.collapse.navbar-collapse
       ul.navbar-nav.ms-auto.mb-2.mb-lg-0
         li.nav-item
-          a.nav-link(href="/") Home
+          a.nav-link.active(href="/") Home
         li.nav-item
           a.nav-link(href="/about.html") About
         li.nav-item

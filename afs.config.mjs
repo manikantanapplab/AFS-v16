@@ -20,7 +20,7 @@ export const MODE = 'per-component'; // most projects start here — change if n
 // true  → inlines above-fold CSS, defers rest (Lighthouse friendly)
 // false → skip (fine for intranets, admin tools, non-public sites)
 
-export const CRITICAL = false; // ← change this
+export const CRITICAL = true; // ← change this
 
 // ── PAGES & COMPONENTS are AUTO-DETECTED ─────────────────────
 // No need to list them manually.

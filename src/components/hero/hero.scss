@@ -9,7 +9,6 @@
     overflow: hidden;
     background-color: var(--color-bg-body);
 
-    // Geometric background grid (subtle dot pattern)
     &::before {
       content: '';
       position: absolute;
@@ -20,7 +19,6 @@
       pointer-events: none;
     }
 
-    // Accent ink-blot at top-right
     &::after {
       content: '';
       position: absolute;
@@ -41,7 +39,6 @@
       100% { border-radius: 30% 70% 50% 50% / 60% 40% 60% 40%; transform: scale(0.97) rotate(-4deg); }
     }
 
-    // Image background variant
     &[style*="background-image"] {
       background-size: cover;
       background-position: center;
@@ -67,9 +64,7 @@
       padding-block: clamp(4rem, 10vw, 8rem);
     }
 
-    .hero-content {
-      max-width: 780px;
-    }
+    .hero-content { max-width: 780px; }
 
     .hero-eyebrow {
       display: inline-flex;
@@ -147,22 +142,25 @@
       text-transform: uppercase;
       border-radius: 2px;
     }
-
-    // Centered variant
-    &.hero-centered {
-      text-align: center;
-      .hero-content { margin-inline: auto; }
-      .hero-eyebrow { margin-inline: auto; }
-      .hero-actions { justify-content: center; }
-      .hero-text { margin-inline: auto; }
-    }
-
-    // Dark variant
-    &.hero-dark {
-      background-color: var(--color-bg-dark);
-      &::before { opacity: 0.2; }
-      .hero-title { color: #F5F4F2; }
-      .hero-text { color: var(--color-gray-400); }
-    }
   }
+
+  // ── Variant classes — outside nesting so purgecss comments compile correctly
+  /* purgecss start ignore */
+  .hero.hero-centered {
+    text-align: center;
+
+    .hero-content  { margin-inline: auto; }
+    .hero-eyebrow  { margin-inline: auto; }
+    .hero-actions  { justify-content: center; }
+    .hero-text     { margin-inline: auto; }
+  }
+
+  .hero.hero-dark {
+    background-color: var(--color-bg-dark);
+
+    &::before { opacity: 0.2; }
+    .hero-title { color: #F5F4F2; }
+    .hero-text  { color: var(--color-gray-400); }
+  }
+  /* purgecss end ignore */
 }

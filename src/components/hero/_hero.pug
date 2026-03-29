@@ -4,12 +4,14 @@
 //-   +hero({ title: 'Hello', eyebrow: 'Welcome', text: '...' })
 //-   +hero({ title: 'Centered', centered: true, dark: true })
 //-   +hero({ title: 'Bg', bg: 'img.jpg' })
+//-   +hero({ title: 'Critical', critical: true })  ← marks as critical-section
 //- ============================================================
 
 mixin hero(data)
   section.hero(
     class=data.centered ? 'hero-centered' : ''
     class=data.dark ? 'hero-dark' : ''
+    class=data.critical ? 'critical-section' : ''
     style=data.bg ? `background-image:url(${data.bg})` : ''
   )
     if data.bg

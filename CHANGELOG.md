@@ -8,6 +8,12 @@ manually applied to existing projects (marked ).
 
 ---
 
+## [v16.1.1] — 2026-03-28
+
+### added preview data files ###
+
+---
+
 ## [16.2.0] — 2026-03-28
 
 ### Critical CSS — Smart extraction (all modes)

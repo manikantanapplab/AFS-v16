@@ -4,6 +4,7 @@ block pagecss
   link(rel="stylesheet" href="assets/css/pages/index.css")
 
 block componentcss
+  link(rel="stylesheet" href="assets/css/components/apicard.css")
   link(rel="stylesheet" href="assets/css/components/button.css")
   link(rel="stylesheet" href="assets/css/components/card.css")
   link(rel="stylesheet" href="assets/css/components/hero.css")
@@ -16,17 +17,31 @@ block title
 block content
   include ../components/hero/_hero.pug
   include ../components/card/_card.pug
+  include ../components/apicard/_apicard.pug
   include ../components/testimonial/_testimonial.pug
   include ../components/section/_section.pug
 
-  //- ── HERO ───────────────────────────────────────────────────
+  //- ── HERO — critical: true marks it as above-fold ───────────
   +hero({
     eyebrow: 'Welcome',
     title: 'Your headline goes here.',
     text: 'Supporting description. Keep it concise and focused on the value you deliver to your audience.',
     primaryBtn: { label: 'Get started', link: '#contact' },
-    secondaryBtn: { label: 'Learn more', link: 'about.html' }
+    secondaryBtn: { label: 'Learn more', link: 'about.html' },
+    critical: true
   })
+
+  .container
+    //- ── API CARD ─────────────────────────────────────────────── 
+    .row
+      .col
+        +apiCard({
+          category:    'Human Resources',
+          categoryIcon: 'https://randomuser.me/api/portraits/women/44.jpg',
+          title:       'QE Employees List',
+          version:     'v1.0',
+          text:        'Access real-time and historical weather data...',
+        })
 
   //- ── STATS ──────────────────────────────────────────────────
   section.section.section-muted
