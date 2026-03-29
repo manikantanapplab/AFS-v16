@@ -8,6 +8,16 @@ manually applied to existing projects (marked ).
 
 ---
 
+## [v16.4.0] — 2026-03-29
+### Critical CSS — critical-section approach
+
+Replaced the previous pattern-matching critical CSS extraction with a
+developer-controlled `critical-section` system. Developers now explicitly
+mark which elements are above the fold — giving full control over what
+gets inlined and eliminating style conflicts with Bootstrap.
+
+---
+
 ## [v16.1.1] — 2026-03-28
 
 ### added preview data files ###
